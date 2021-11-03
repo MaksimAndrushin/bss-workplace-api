@@ -1,0 +1,8 @@
+.env
+.idea
+.idea/
+.cache
+.venv
+bin/
+data/
+main

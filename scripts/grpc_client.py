@@ -1,5 +1,8 @@
 import asyncio
 
+import sys
+sys.path.append("./pypkg/bss-workplace-api/dist/grpc_bss_workplace_api-1.0.0-py3.8.egg")
+
 from grpclib.client import Channel
 
 from ozonmp.bss_workplace_api.v1.bss_workplace_api_grpc import BssWorkplaceApiServiceStub

@@ -1,0 +1,78 @@
+syntax = "proto3";
+
+package ozonmp.bss_workplace_api.v1;
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ozonmp/bss-workplace-api/pkg/bss-workplace-api;bss_workplace_api";
+
+// BssWorkplaceApiService - Service for working with workplaces
+service BssWorkplaceApiService {
+  // CreateWorkplaceV1 - Create a workplace
+  rpc CreateWorkplaceV1(CreateWorkplaceV1Request) returns (CreateWorkplaceV1Response) {
+    option (google.api.http) = {
+      post: "/v1/workplaces"
+      body: "foo"
+    };
+  }
+
+  // DescribeWorkplaceV1 - Describe a workplace
+  rpc DescribeWorkplaceV1(DescribeWorkplaceV1Request) returns (DescribeWorkplaceV1Response) {
+    option (google.api.http) = {
+      get: "/v1/workplaces/{workplace_id}"
+    };
+  }
+
+  // ListWorkplaceV1 - List a workplace
+  rpc ListWorkplacesV1(ListWorkplacesV1Request) returns (ListWorkplacesV1Response) {
+    option (google.api.http) = {
+      get: "/v1/workplaces"
+    };
+  }
+
+  // RemoveWorkplaceV1 - Remove a workplace
+  rpc RemoveWorkplaceV1(RemoveWorkplaceV1Request) returns (RemoveWorkplaceV1Response) {
+    option (google.api.http) = {
+      delete: "/v1/workplaces/{workplace_id}"
+    };
+  }
+}
+
+message Workplace {
+  uint64 id = 1;
+  string foo = 2;
+  google.protobuf.Timestamp created = 3;
+}
+
+message CreateWorkplaceV1Request {
+  string foo = 1;
+}
+
+message CreateWorkplaceV1Response {
+  uint64 workplace_id = 1;
+}
+
+message DescribeWorkplaceV1Request {
+  uint64 workplace_id = 1 [(validate.rules).uint64.gt = 0];
+}
+
+message DescribeWorkplaceV1Response {
+  Workplace value = 1;
+}
+
+message ListWorkplacesV1Request {
+}
+
+message ListWorkplacesV1Response {
+  repeated Workplace items = 1;
+}
+
+message RemoveWorkplaceV1Request {
+    uint64 workplace_id = 1 [(validate.rules).uint64.gt = 0];
+  }
+
+message RemoveWorkplaceV1Response {
+  bool found = 1;
+}

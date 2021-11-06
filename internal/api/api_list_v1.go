@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/ozonmp/bss-workplace-api/internal/api/mappers"
 	pb "github.com/ozonmp/bss-workplace-api/pkg/bss-workplace-api"
 	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
@@ -35,12 +36,7 @@ func (o *workplaceAPI) ListWorkplacesV1(
 
 	log.Debug().Msg("ListWorkplacesV1 - success")
 
-	var items []*pb.Workplace
-	for _, workplace := range workplaces {
-		items = append(items, &pb.Workplace{Id: workplace.ID, Foo: workplace.Foo})
-	}
-
 	return &pb.ListWorkplacesV1Response{
-		Items: items,
+		Items: mappers.WorkplacesToListItems(workplaces),
 	}, nil
 }

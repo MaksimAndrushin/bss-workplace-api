@@ -3,7 +3,7 @@ package producer
 import (
 	"errors"
 	"github.com/gammazero/workerpool"
-	"github.com/ozonmp/bss-workplace-api/internal/mocks"
+	"github.com/ozonmp/bss-workplace-api/internal/mocks/fixtures/events"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 	"testing"
 	"time"
@@ -18,7 +18,7 @@ type KafkaProducer struct {
 func TestSendToKafkaSuccessful(t *testing.T) {
 	t.Parallel()
 
-	fixture := mocks.Setup(t)
+	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
 	kafkaTestProducer := NewTestKafkaProducer(2, fixture)
@@ -37,7 +37,7 @@ func TestSendToKafkaSuccessful(t *testing.T) {
 func TestSendToKafkaUnsuccessful(t *testing.T) {
 	t.Parallel()
 
-	fixture := mocks.Setup(t)
+	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
 	kafkaTestProducer := NewTestKafkaProducer(2, fixture)
@@ -56,7 +56,7 @@ func TestSendToKafkaUnsuccessful(t *testing.T) {
 func TestSendToKafkaThreeSEventsAndOneUEvent(t *testing.T) {
 	t.Parallel()
 
-	fixture := mocks.Setup(t)
+	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
 	kafkaTestProducer := NewTestKafkaProducer(2, fixture)
@@ -87,7 +87,7 @@ func TestSendToKafkaThreeSEventsAndOneUEvent(t *testing.T) {
 
 }
 
-func NewTestKafkaProducer(kafkaWorkers uint64, fixture mocks.RetranslatorMockFixture) KafkaProducer {
+func NewTestKafkaProducer(kafkaWorkers uint64, fixture events.RetranslatorMockFixture) KafkaProducer {
 	events := make(chan model.WorkplaceEvent, 512)
 	workerPool := workerpool.New(2)
 

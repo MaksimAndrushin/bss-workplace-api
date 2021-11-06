@@ -202,7 +202,7 @@ services:
     networks:
       - ompnw
     volumes:
-      - mongodata:/data/db
+      - mongodata:/data/fixtures
 
   # Graylog: https://hub.docker.com/r/graylog/graylog/
   graylog:

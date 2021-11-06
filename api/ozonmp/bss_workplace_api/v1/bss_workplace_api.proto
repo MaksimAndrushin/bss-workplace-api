@@ -14,7 +14,7 @@ service BssWorkplaceApiService {
   rpc CreateWorkplaceV1(CreateWorkplaceV1Request) returns (CreateWorkplaceV1Response) {
     option (google.api.http) = {
       post: "/v1/workplaces"
-      body: "foo"
+      body: "*"
     };
   }
 

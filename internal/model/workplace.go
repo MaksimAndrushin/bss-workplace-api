@@ -1,8 +1,8 @@
 package model
 
 type Workplace struct {
-	ID uint64 `db:"id"`
-	Foo string `db:"foo"`
+	ID uint64 `fixtures:"id"`
+	Foo string `fixtures:"foo"`
 }
 
 type EventType uint8

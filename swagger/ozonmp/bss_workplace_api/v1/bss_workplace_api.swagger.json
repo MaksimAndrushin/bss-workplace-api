@@ -61,7 +61,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/v1CreateWorkplaceV1Request"
             }
           }
         ],
@@ -161,6 +161,14 @@
           "items": {
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1CreateWorkplaceV1Request": {
+      "type": "object",
+      "properties": {
+        "foo": {
+          "type": "string"
         }
       }
     },

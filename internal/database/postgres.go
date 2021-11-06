@@ -16,7 +16,7 @@ func NewPostgres(dsn, driver string) (*sqlx.DB, error) {
 	}
 
 	// need to uncomment for homework-4
-	// if err = db.Ping(); err != nil {
+	// if err = fixtures.Ping(); err != nil {
 	// 	log.Error().Err(err).Msgf("failed ping the database")
 
 	// 	return nil, err

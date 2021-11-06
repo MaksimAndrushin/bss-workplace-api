@@ -2,12 +2,12 @@ package retranslator
 
 import (
 	"errors"
+	"github.com/ozonmp/bss-workplace-api/internal/mocks/fixtures/events"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 	"testing"
 	"time"
 
 	"github.com/golang/mock/gomock"
-	"github.com/ozonmp/bss-workplace-api/internal/mocks"
 )
 
 var eventsData = []model.WorkplaceEvent{
@@ -20,7 +20,7 @@ var eventsData = []model.WorkplaceEvent{
 func TestWithoutErrors(t *testing.T) {
 	t.Parallel()
 
-	fixture := mocks.Setup(t)
+	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
 	fixture.Repo.EXPECT().Lock(uint64(4)).Return(eventsData, nil).Times(1)
@@ -33,7 +33,7 @@ func TestWithoutErrors(t *testing.T) {
 func TestKafkaAndDBUpdErrors(t *testing.T) {
 	t.Parallel()
 
-	fixture := mocks.Setup(t)
+	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
 	fixture.Repo.EXPECT().Lock(uint64(4)).Return(eventsData, nil).Times(1)
@@ -56,7 +56,7 @@ func TestKafkaAndDBUpdErrors(t *testing.T) {
 func TestLockErrors(t *testing.T) {
 	t.Parallel()
 
-	fixture := mocks.Setup(t)
+	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
 	fixture.Repo.EXPECT().Lock(uint64(4)).Return( nil, errors.New("Lock error")).Times(1)
@@ -65,7 +65,7 @@ func TestLockErrors(t *testing.T) {
 }
 
 
-func startRetranslator(fixture mocks.RetranslatorMockFixture) {
+func startRetranslator(fixture events.RetranslatorMockFixture) {
 	cfg := Config{
 		ChannelSize:    512,
 		ConsumerCount:  1,

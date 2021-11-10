@@ -1,8 +1,10 @@
 package producer
 
 import (
+	"context"
 	"errors"
 	"github.com/gammazero/workerpool"
+	"github.com/golang/mock/gomock"
 	"github.com/ozonmp/bss-workplace-api/internal/mocks/fixtures/events"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 	"testing"
@@ -27,9 +29,9 @@ func TestSendToKafkaSuccessful(t *testing.T) {
 	event := model.WorkplaceEvent{ID: 1, Type: 0, Status: 1, Entity: &model.Workplace{ID: 1}}
 
 	fixture.Sender.EXPECT().Send(&event).Return(nil).Times(1)
-	fixture.Repo.EXPECT().Remove([]uint64{event.ID}).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(), []uint64{event.ID}, nil).Times(1)
 
-	kafkaTestProducer.producer.Start()
+	kafkaTestProducer.producer.Start(context.Background())
 	kafkaTestProducer.events <- event
 	time.Sleep(1 * time.Second)
 }
@@ -46,9 +48,9 @@ func TestSendToKafkaUnsuccessful(t *testing.T) {
 	event := model.WorkplaceEvent{ID: 1, Type: 0, Status: 1, Entity: &model.Workplace{ID: 1}}
 
 	fixture.Sender.EXPECT().Send(&event).Return(errors.New("Sending error")).Times(1)
-	fixture.Repo.EXPECT().Unlock([]uint64{event.ID}).Times(1)
+	fixture.Repo.EXPECT().Unlock(gomock.Any(), []uint64{event.ID}, nil).Times(1)
 
-	kafkaTestProducer.producer.Start()
+	kafkaTestProducer.producer.Start(context.Background())
 	kafkaTestProducer.events <- event
 	time.Sleep(1 * time.Second)
 }
@@ -73,12 +75,12 @@ func TestSendToKafkaThreeSEventsAndOneUEvent(t *testing.T) {
 			fixture.Sender.EXPECT().Send(&events[1]).Return(nil).Times(1).After(
 				fixture.Sender.EXPECT().Send(&events[0]).Return(nil).Times(1))))
 
-	fixture.Repo.EXPECT().Remove([]uint64{events[0].ID}).Times(1)
-	fixture.Repo.EXPECT().Remove([]uint64{events[1].ID}).Times(1)
-	fixture.Repo.EXPECT().Unlock([]uint64{events[2].ID}).Times(1)
-	fixture.Repo.EXPECT().Remove([]uint64{events[3].ID}).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(),[]uint64{events[0].ID}, nil).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(),[]uint64{events[1].ID}, nil).Times(1)
+	fixture.Repo.EXPECT().Unlock(gomock.Any(),[]uint64{events[2].ID}, nil).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(),[]uint64{events[3].ID}, nil).Times(1)
 
-	kafkaTestProducer.producer.Start()
+	kafkaTestProducer.producer.Start(context.Background())
 
 	for _, v := range events {
 		kafkaTestProducer.events <- v

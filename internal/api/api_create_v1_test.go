@@ -16,7 +16,7 @@ func TestSuccessfulCreateWorkplaceV1(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().CreateWorkplace(gomock.Any(), gomock.Any(), gomock.Any()).Return(uint64(1), nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().CreateWorkplace(gomock.Any(), "test value", uint32(10)).Return(uint64(1), nil).Times(1)
 
 	req := &pb.CreateWorkplaceV1Request{Name: "test value", Size: 10}
 	resp, err := apiFixture.Api.CreateWorkplaceV1(context.Background(), req)
@@ -32,7 +32,7 @@ func TestUnsuccessfulCreateWorkplaceV1_Internal(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().CreateWorkplace(gomock.Any(), gomock.Any(), gomock.Any()).Return(uint64(0), errors.New("error")).Times(1)
+	apiFixture.WorkplaceService.EXPECT().CreateWorkplace(gomock.Any(), "test value", uint32(10)).Return(uint64(0), errors.New("error")).Times(1)
 
 
 	req := &pb.CreateWorkplaceV1Request{Name: "test value", Size: 10}

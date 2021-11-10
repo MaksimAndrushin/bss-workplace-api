@@ -17,7 +17,9 @@ func Setup(t *testing.T) DBMockFixture {
 
 	ctrl := gomock.NewController(t)
 	workplaceService := mocks.NewMockWorkplaceService(ctrl)
-	api := &workplaceAPI{WorkplaceService: workplaceService}
+	api := &workplaceAPI{
+		WorkplaceService: workplaceService,
+	}
 
 	return DBMockFixture{
 		Ctrl:             ctrl,

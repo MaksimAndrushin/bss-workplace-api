@@ -15,7 +15,7 @@ func TestRemoveWorkplaceV1(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().RemoveWorkplace(gomock.Any(), gomock.Any()).Return(true, nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().RemoveWorkplace(gomock.Any(), uint64(1)).Return(true, nil).Times(1)
 
 	req := &pb.RemoveWorkplaceV1Request{WorkplaceId: 1}
 	resp, err := apiFixture.Api.RemoveWorkplaceV1(context.Background(), req)
@@ -31,7 +31,7 @@ func TestUnsuccessfulRemoveWorkplaceV1_Internal(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().RemoveWorkplace(gomock.Any(), gomock.Any()).Return(false, errors.New("Error")).Times(1)
+	apiFixture.WorkplaceService.EXPECT().RemoveWorkplace(gomock.Any(), uint64(1)).Return(false, errors.New("Error")).Times(1)
 
 	req := &pb.RemoveWorkplaceV1Request{WorkplaceId: 1}
 	_, err := apiFixture.Api.RemoveWorkplaceV1(context.Background(), req)
@@ -47,7 +47,7 @@ func TestUnsuccessfulRemoveWorkplaceV1_Notfound(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().RemoveWorkplace(gomock.Any(), gomock.Any()).Return(false, nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().RemoveWorkplace(gomock.Any(), uint64(1)).Return(false, nil).Times(1)
 
 	req := &pb.RemoveWorkplaceV1Request{WorkplaceId: 1}
 	_, err := apiFixture.Api.RemoveWorkplaceV1(context.Background(), req)

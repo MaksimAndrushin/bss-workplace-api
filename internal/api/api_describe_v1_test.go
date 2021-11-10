@@ -16,7 +16,7 @@ func TestDescribeWorkplaceV1(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().DescribeWorkplace(gomock.Any(), gomock.Any()).Return(&model.Workplace{ID: 1, Name: "test", Size: 10}, nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().DescribeWorkplace(gomock.Any(), uint64(1)).Return(&model.Workplace{ID: 1, Name: "test", Size: 10}, nil).Times(1)
 
 	req := &pb.DescribeWorkplaceV1Request{WorkplaceId: 1}
 	resp, err := apiFixture.Api.DescribeWorkplaceV1(context.Background(), req)
@@ -35,7 +35,7 @@ func TestUnsuccessfulDescribeWorkplaceV1_Internal(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.WorkplaceService.EXPECT().DescribeWorkplace(gomock.Any(), gomock.Any()).Return(nil, errors.New("Error")).Times(1)
+	apiFixture.WorkplaceService.EXPECT().DescribeWorkplace(gomock.Any(), uint64(1)).Return(nil, errors.New("Error")).Times(1)
 
 	req := &pb.DescribeWorkplaceV1Request{WorkplaceId: 1}
 	_, err := apiFixture.Api.DescribeWorkplaceV1(context.Background(), req)

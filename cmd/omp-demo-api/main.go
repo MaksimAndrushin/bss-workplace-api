@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"os/signal"
 	"syscall"
@@ -22,7 +23,7 @@ func main() {
 	}
 
 	var retranslator = retranslator.NewRetranslator(cfg)
-	retranslator.Start()
+	retranslator.Start(context.Background())
 
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 

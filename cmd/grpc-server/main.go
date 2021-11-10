@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 
@@ -52,7 +53,9 @@ func main() {
 		cfg.Database.SslMode,
 	)
 
-	db, err := database.NewPostgres(dsn, cfg.Database.Driver)
+//	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", cfg.Database.User, cfg.Database.Password, cfg.Database.Host, cfg.Database.Port, cfg.Database.Name)
+
+	db, err := database.NewPostgres(context.Background(), dsn, cfg.Database.Driver)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed init postgres")
 	}

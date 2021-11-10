@@ -17,13 +17,14 @@ type DBMockFixture struct {
 func Setup(t *testing.T) DBMockFixture {
 
 	ctrl := gomock.NewController(t)
-	repo := mocks.NewMockRepo(ctrl)
-	api := api2.NewWorkplaceAPI(repo)
+	workplaceRepo := mocks.NewMockRepo(ctrl)
+	workplaceEventRepo := mocks.NewMockWorkplaceEventRepo(ctrl)
+	api := api2.NewWorkplaceAPI(workplaceRepo, workplaceEventRepo)
 
 	return DBMockFixture{
 		Ctrl: ctrl,
-		Repo: repo,
-		Api: api,
+		Repo: workplaceRepo,
+		Api:  api,
 	}
 
 }

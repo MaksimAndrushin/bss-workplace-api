@@ -2,7 +2,8 @@ package producer
 
 import (
 	"fmt"
-	"github.com/ozonmp/bss-workplace-api/internal/app/repo"
+	"github.com/ozonmp/bss-workplace-api/internal/repo"
+	"golang.org/x/net/context"
 	"log"
 	"sync"
 	"time"
@@ -14,7 +15,7 @@ import (
 )
 
 type Producer interface {
-	Start()
+	Start(ctx context.Context)
 	Close()
 }
 
@@ -30,7 +31,7 @@ type producer struct {
 	wg   *sync.WaitGroup
 	done chan interface{}
 
-	repo repo.EventRepo
+	repo repo.WorkplaceEventRepo
 }
 
 func NewKafkaProducer(
@@ -38,7 +39,7 @@ func NewKafkaProducer(
 	sender sender.EventSender,
 	events <-chan model.WorkplaceEvent,
 	workerPool *workerpool.WorkerPool,
-	repo repo.EventRepo,
+	repo repo.WorkplaceEventRepo,
 ) Producer {
 
 	var wg = &sync.WaitGroup{}
@@ -56,7 +57,7 @@ func NewKafkaProducer(
 	}
 }
 
-func (p *producer) Start() {
+func (p *producer) Start(ctx context.Context) {
 	for i := uint64(0); i < p.n; i++ {
 		p.wg.Add(1)
 		go func() {
@@ -64,7 +65,7 @@ func (p *producer) Start() {
 			for {
 				select {
 				case event := <-p.events:
-					p.processEvent(event)
+					p.processEvent(ctx, event)
 				case <-p.done:
 					return
 				}
@@ -73,27 +74,27 @@ func (p *producer) Start() {
 	}
 }
 
-func (p *producer) processEvent(event model.WorkplaceEvent) {
+func (p *producer) processEvent(ctx context.Context, event model.WorkplaceEvent) {
 	if err := p.sender.Send(&event); err != nil {
-		p.procSendToKafkaUnsuccessful(event)
+		p.procSendToKafkaUnsuccessful(ctx, event)
 	} else {
-		p.procSendToKafkaSuccessful(event)
+		p.procSendToKafkaSuccessful(ctx, event)
 	}
 }
 
-func (p *producer) procSendToKafkaSuccessful(event model.WorkplaceEvent) {
+func (p *producer) procSendToKafkaSuccessful(ctx context.Context, event model.WorkplaceEvent) {
 	p.workerPool.Submit(func() {
-		if err := p.repo.Remove([]uint64{event.ID}); err != nil {
+		if err := p.repo.Remove(ctx, []uint64{event.ID}, nil); err != nil {
 			log.Println(fmt.Sprintf("REMOVE ERROR!!!! Event ID - %d is not deleted in DB", event.ID))
 		}
 	})
 }
 
-func (p *producer) procSendToKafkaUnsuccessful(event model.WorkplaceEvent) {
+func (p *producer) procSendToKafkaUnsuccessful(ctx context.Context, event model.WorkplaceEvent) {
 	log.Println(fmt.Sprintf("ERROR!!!! Event ID - %d not sended to kafka", event.ID))
 
 	p.workerPool.Submit(func() {
-		if err := p.repo.Unlock([]uint64{event.ID}); err != nil {
+		if err := p.repo.Unlock(ctx, []uint64{event.ID}, nil); err != nil {
 			log.Println(fmt.Sprintf("UNLOCK ERROR!!!! Event ID - %d is not unlocked in DB", event.ID))
 		}
 	})

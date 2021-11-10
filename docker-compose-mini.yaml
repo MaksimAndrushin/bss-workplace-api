@@ -39,6 +39,33 @@ services:
     networks:
       - ompnw
 
+  postgres:
+    image: postgres:14
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "postgres", "-U", "postgres" ]
+      timeout: 45s
+      interval: 10s
+      retries: 10
+    restart: always
+    logging:
+      driver: 'gelf'
+      options:
+        gelf-address: 'udp://localhost:12201'
+        tag: postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: bss_workplace_api
+      APP_DB_USER: docker
+      APP_DB_PASS: docker
+    networks:
+      - ompnw
+    volumes:
+      # - pgdata:/var/lib/postgresql/data
+      - ./scripts/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+
 networks:
   ompnw:
     driver: bridge

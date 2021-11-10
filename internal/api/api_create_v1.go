@@ -19,7 +19,7 @@ func (o *workplaceAPI) CreateWorkplaceV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	workplaceId, err := o.repo.CreateWorkplace(ctx, req.Foo)
+	workplaceId, err := o.WorkplaceService.CreateWorkplace(ctx, req.GetName(), req.GetSize())
 	if err != nil {
 		log.Error().Err(err).Msg("CreateWorkplaceV1 -- failed")
 

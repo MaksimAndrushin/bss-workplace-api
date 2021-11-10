@@ -42,12 +42,14 @@ service BssWorkplaceApiService {
 
 message Workplace {
   uint64 id = 1;
-  string foo = 2;
-  google.protobuf.Timestamp created = 3;
+  string name = 2;
+  uint32 size = 3;
+  google.protobuf.Timestamp created = 4;
 }
 
 message CreateWorkplaceV1Request {
-  string foo = 1;
+  string name = 1;
+  uint32 size = 2 [(validate.rules).uint32.gt = 0];
 }
 
 message CreateWorkplaceV1Response {
@@ -63,6 +65,8 @@ message DescribeWorkplaceV1Response {
 }
 
 message ListWorkplacesV1Request {
+  uint64 offset = 1;
+  uint64 limit = 2 [(validate.rules).uint64.gt = 0];
 }
 
 message ListWorkplacesV1Response {

@@ -8,21 +8,21 @@ import (
 )
 
 type DBMockFixture struct {
-	Ctrl *gomock.Controller
-	Repo *mocks.MockRepo
-	Api  bss_workplace_api.BssWorkplaceApiServiceServer
+	Ctrl             *gomock.Controller
+	WorkplaceService *mocks.MockWorkplaceService
+	Api              bss_workplace_api.BssWorkplaceApiServiceServer
 }
 
 func Setup(t *testing.T) DBMockFixture {
 
 	ctrl := gomock.NewController(t)
-	repo := mocks.NewMockRepo(ctrl)
-	api := NewWorkplaceAPI(repo)
+	workplaceService := mocks.NewMockWorkplaceService(ctrl)
+	api := &workplaceAPI{WorkplaceService: workplaceService}
 
 	return DBMockFixture{
-		Ctrl: ctrl,
-		Repo: repo,
-		Api: api,
+		Ctrl:             ctrl,
+		WorkplaceService: workplaceService,
+		Api:              api,
 	}
 
 }

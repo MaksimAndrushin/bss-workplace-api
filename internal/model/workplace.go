@@ -1,26 +1,14 @@
 package model
 
-type Workplace struct {
-	ID uint64 `fixtures:"id"`
-	Foo string `fixtures:"foo"`
-}
-
-type EventType uint8
-
-type EventStatus uint8
-
-const (
-	Created EventType = iota
-	Updated
-	Removed
-
-	Deferred EventStatus = iota
-	Processed
+import (
+	"time"
 )
 
-type WorkplaceEvent struct {
-	ID     uint64
-	Type   EventType
-	Status EventStatus
-	Entity *Workplace
+type Workplace struct {
+	ID      uint64    `db:"id"`
+	Name    string    `db:"name"`
+	Size    uint32    `db:"size"`
+	Removed bool      `db:"removed"`
+	Created time.Time `db:"created"`
+	Updated time.Time `db:"updated"`
 }

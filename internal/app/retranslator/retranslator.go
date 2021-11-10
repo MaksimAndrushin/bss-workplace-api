@@ -1,11 +1,12 @@
 package retranslator
 
 import (
+	"github.com/ozonmp/bss-workplace-api/internal/repo"
+	"golang.org/x/net/context"
 	"time"
 
 	"github.com/ozonmp/bss-workplace-api/internal/app/consumer"
 	"github.com/ozonmp/bss-workplace-api/internal/app/producer"
-	"github.com/ozonmp/bss-workplace-api/internal/app/repo"
 	"github.com/ozonmp/bss-workplace-api/internal/app/sender"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 
@@ -13,7 +14,7 @@ import (
 )
 
 type Retranslator interface {
-	Start()
+	Start(ctx context.Context)
 	Close()
 }
 
@@ -27,7 +28,7 @@ type Config struct {
 	ProducerCount uint64
 	WorkerCount   int
 
-	Repo   repo.EventRepo
+	Repo   repo.WorkplaceEventRepo
 	Sender sender.EventSender
 }
 
@@ -64,9 +65,9 @@ func NewRetranslator(cfg Config) Retranslator {
 	}
 }
 
-func (r *retranslator) Start() {
-	r.producer.Start()
-	r.consumer.Start()
+func (r *retranslator) Start(ctx context.Context) {
+	r.producer.Start(ctx)
+	r.consumer.Start(ctx)
 }
 
 func (r *retranslator) Close() {

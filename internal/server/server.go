@@ -107,9 +107,10 @@ func (s *GrpcServer) Start(cfg *config.Config) error {
 		)),
 	)
 
-	r := repo.NewRepo(s.db, s.batchSize)
+	workplaceRepo := repo.NewWorkplaceRepo(s.db, s.batchSize)
+	workplaceEventsRepo := repo.NewWorkplaceEventRepo(s.db, s.batchSize)
 
-	pb.RegisterBssWorkplaceApiServiceServer(grpcServer, api.NewWorkplaceAPI(r))
+	pb.RegisterBssWorkplaceApiServiceServer(grpcServer, api.NewWorkplaceAPI(workplaceRepo, workplaceEventsRepo, s.db))
 	grpc_prometheus.EnableHandlingTimeHistogram()
 	grpc_prometheus.Register(grpcServer)
 

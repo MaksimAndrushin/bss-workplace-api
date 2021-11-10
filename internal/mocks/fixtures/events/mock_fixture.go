@@ -8,7 +8,7 @@ import (
 
 type RetranslatorMockFixture struct {
 	Ctrl   *gomock.Controller
-	Repo   *mocks.MockEventRepo
+	Repo   *mocks.MockWorkplaceEventRepo
 	Sender *mocks.MockEventSender
 }
 
@@ -17,7 +17,7 @@ func Setup(t *testing.T) RetranslatorMockFixture {
 
 	return RetranslatorMockFixture{
 		Ctrl:   ctrl,
-		Repo:   mocks.NewMockEventRepo(ctrl),
+		Repo:   mocks.NewMockWorkplaceEventRepo(ctrl),
 		Sender: mocks.NewMockEventSender(ctrl),
 	}
 }

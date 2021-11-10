@@ -20,7 +20,7 @@ func (o *workplaceAPI) ListWorkplacesV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	workplaces, err := o.repo.ListWorkplaces(ctx)
+	workplaces, err := o.WorkplaceService.ListWorkplaces(ctx, req.GetOffset(), req.GetLimit())
 	if err != nil {
 		log.Error().Err(err).Msg("ListWorkplacesV1 -- failed")
 

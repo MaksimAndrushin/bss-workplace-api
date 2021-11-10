@@ -42,7 +42,9 @@ func (m *Workplace) Validate() error {
 
 	// no validation rules for Id
 
-	// no validation rules for Foo
+	// no validation rules for Name
+
+	// no validation rules for Size
 
 	if v, ok := interface{}(m.GetCreated()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
@@ -119,7 +121,14 @@ func (m *CreateWorkplaceV1Request) Validate() error {
 		return nil
 	}
 
-	// no validation rules for Foo
+	// no validation rules for Name
+
+	if m.GetSize() <= 0 {
+		return CreateWorkplaceV1RequestValidationError{
+			field:  "Size",
+			reason: "value must be greater than 0",
+		}
+	}
 
 	return nil
 }
@@ -407,6 +416,15 @@ var _ interface {
 func (m *ListWorkplacesV1Request) Validate() error {
 	if m == nil {
 		return nil
+	}
+
+	// no validation rules for Offset
+
+	if m.GetLimit() <= 0 {
+		return ListWorkplacesV1RequestValidationError{
+			field:  "Limit",
+			reason: "value must be greater than 0",
+		}
 	}
 
 	return nil

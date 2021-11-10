@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/ozonmp/bss-workplace-api/internal/mocks/fixtures/events"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
+	"golang.org/x/net/context"
 	"testing"
 	"time"
 
@@ -23,9 +24,9 @@ func TestWithoutErrors(t *testing.T) {
 	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
-	fixture.Repo.EXPECT().Lock(uint64(4)).Return(eventsData, nil).Times(1)
-	fixture.Sender.EXPECT().Send(gomock. Any()).Return(nil).Times(4)
-	fixture.Repo.EXPECT().Remove(gomock.Any()).Return(nil).Times(4)
+	fixture.Repo.EXPECT().Lock(gomock.Any(), uint64(4), nil).Return(eventsData, nil).Times(1)
+	fixture.Sender.EXPECT().Send(gomock.Any()).Return(nil).Times(4)
+	fixture.Repo.EXPECT().Remove(gomock.Any(), gomock.Any(), nil).Return(nil).Times(4)
 
 	startRetranslator(fixture)
 }
@@ -36,19 +37,19 @@ func TestKafkaAndDBUpdErrors(t *testing.T) {
 	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
-	fixture.Repo.EXPECT().Lock(uint64(4)).Return(eventsData, nil).Times(1)
+	fixture.Repo.EXPECT().Lock(gomock.Any(), uint64(4), nil).Return(eventsData, nil).Times(1)
 
 	fixture.Sender.EXPECT().Send(gomock.Any()).Return(nil).Times(1)
-	fixture.Repo.EXPECT().Remove(gomock.Any()).Return(errors.New("Remove error")).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(), gomock.Any(), nil).Return(errors.New("Remove error")).Times(1)
 
 	fixture.Sender.EXPECT().Send(gomock.Any()).Return(errors.New("Send error")).Times(1)
-	fixture.Repo.EXPECT().Unlock(gomock.Any()).Return(errors.New("Unlock error")).Times(1)
+	fixture.Repo.EXPECT().Unlock(gomock.Any(), gomock.Any(), nil).Return(errors.New("Unlock error")).Times(1)
 
 	fixture.Sender.EXPECT().Send(gomock.Any()).Return(nil).Times(1)
-	fixture.Repo.EXPECT().Remove(gomock.Any()).Return(nil).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(), gomock.Any(), nil).Return(nil).Times(1)
 
 	fixture.Sender.EXPECT().Send(gomock.Any()).Return(nil).Times(1)
-	fixture.Repo.EXPECT().Remove(gomock.Any()).Return(nil).Times(1)
+	fixture.Repo.EXPECT().Remove(gomock.Any(), gomock.Any(), nil).Return(nil).Times(1)
 
 	startRetranslator(fixture)
 }
@@ -59,11 +60,10 @@ func TestLockErrors(t *testing.T) {
 	fixture := events.Setup(t)
 	defer fixture.TearDown()
 
-	fixture.Repo.EXPECT().Lock(uint64(4)).Return( nil, errors.New("Lock error")).Times(1)
+	fixture.Repo.EXPECT().Lock(gomock.Any(), uint64(4), nil).Return(nil, errors.New("Lock error")).Times(1)
 
 	startRetranslator(fixture)
 }
-
 
 func startRetranslator(fixture events.RetranslatorMockFixture) {
 	cfg := Config{
@@ -78,7 +78,7 @@ func startRetranslator(fixture events.RetranslatorMockFixture) {
 	}
 
 	retranslator := NewRetranslator(cfg)
-	retranslator.Start()
+	retranslator.Start(context.Background())
 
 	time.Sleep(5 * time.Second)
 

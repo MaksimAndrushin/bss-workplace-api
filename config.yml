@@ -32,10 +32,10 @@ status:
   versionPath: /version
 
 database:
-  host: postgres
+  host: 0.0.0.0
   port: 5432
-  user: docker
-  password: docker
+  user: postgres
+  password: postgres
   name: bss_workplace_api
   sslmode: disable
   migrations: migrations

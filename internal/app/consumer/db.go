@@ -1,15 +1,16 @@
 package consumer
 
 import (
+	"github.com/ozonmp/bss-workplace-api/internal/repo"
+	"golang.org/x/net/context"
 	"sync"
 	"time"
 
-	"github.com/ozonmp/bss-workplace-api/internal/app/repo"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 )
 
 type Consumer interface {
-	Start()
+	Start(ctx context.Context)
 	Close()
 }
 
@@ -17,7 +18,7 @@ type consumer struct {
 	n      uint64
 	events chan<- model.WorkplaceEvent
 
-	repo repo.EventRepo
+	repo repo.WorkplaceEventRepo
 
 	batchSize uint64
 	timeout   time.Duration
@@ -29,7 +30,7 @@ type consumer struct {
 type Config struct {
 	n         uint64
 	events    chan<- model.WorkplaceEvent
-	repo      repo.EventRepo
+	repo      repo.WorkplaceEventRepo
 	batchSize uint64
 	timeout   time.Duration
 }
@@ -38,7 +39,7 @@ func NewDbConsumer(
 	n uint64,
 	batchSize uint64,
 	consumeTimeout time.Duration,
-	repo repo.EventRepo,
+	repo repo.WorkplaceEventRepo,
 	events chan<- model.WorkplaceEvent) Consumer {
 
 	var wg = &sync.WaitGroup{}
@@ -55,7 +56,7 @@ func NewDbConsumer(
 	}
 }
 
-func (c *consumer) Start() {
+func (c *consumer) Start(ctx context.Context) {
 	for i := uint64(0); i < c.n; i++ {
 		c.wg.Add(1)
 
@@ -65,7 +66,7 @@ func (c *consumer) Start() {
 			for {
 				select {
 				case <-ticker.C:
-					events, err := c.repo.Lock(c.batchSize)
+					events, err := c.repo.Lock(ctx, c.batchSize, nil)
 					if err != nil {
 						continue
 					}

@@ -16,9 +16,9 @@ func TestSuccessfulCreateWorkplaceV1(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.Repo.EXPECT().CreateWorkplace(gomock.Any(), gomock.Any()).Return(uint64(1), nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().CreateWorkplace(gomock.Any(), gomock.Any(), gomock.Any()).Return(uint64(1), nil).Times(1)
 
-	req := &pb.CreateWorkplaceV1Request{Foo: "test value"}
+	req := &pb.CreateWorkplaceV1Request{Name: "test value", Size: 10}
 	resp, err := apiFixture.Api.CreateWorkplaceV1(context.Background(), req)
 
 	assert.Nil(t, err, "Error must be nil")
@@ -32,9 +32,10 @@ func TestUnsuccessfulCreateWorkplaceV1_Internal(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.Repo.EXPECT().CreateWorkplace(gomock.Any(), gomock.Any()).Return(uint64(0), errors.New("error")).Times(1)
+	apiFixture.WorkplaceService.EXPECT().CreateWorkplace(gomock.Any(), gomock.Any(), gomock.Any()).Return(uint64(0), errors.New("error")).Times(1)
 
-	req := &pb.CreateWorkplaceV1Request{Foo: "test value"}
+
+	req := &pb.CreateWorkplaceV1Request{Name: "test value", Size: 10}
 	_, err := apiFixture.Api.CreateWorkplaceV1(context.Background(), req)
 
 	assert.NotNil(t, err, "Error must not be nil")

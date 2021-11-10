@@ -1,6 +1,8 @@
 package api
 
 import (
+	"github.com/jmoiron/sqlx"
+	"github.com/ozonmp/bss-workplace-api/internal/service"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
 
@@ -18,10 +20,12 @@ var (
 
 type workplaceAPI struct {
 	pb.UnimplementedBssWorkplaceApiServiceServer
-	repo repo.Repo
+	WorkplaceService service.WorkplaceService
 }
 
 // NewWorkplaceAPI returns api of bss-workplace-api service
-func NewWorkplaceAPI(r repo.Repo) pb.BssWorkplaceApiServiceServer {
-	return &workplaceAPI{repo: r}
+func NewWorkplaceAPI(workplaceRepo repo.WorkplaceRepo, workplaceEventRepo repo.WorkplaceEventRepo, db *sqlx.DB) pb.BssWorkplaceApiServiceServer {
+	return &workplaceAPI{
+		WorkplaceService: service.NewWorkplaceService(workplaceRepo, workplaceEventRepo, db),
+	}
 }

@@ -8,7 +8,8 @@ import (
 func WorkplaceToListItem(workplace model.Workplace) pb.Workplace {
 	return pb.Workplace{
 		Id:  workplace.ID,
-		Foo: workplace.Foo,
+		Name: workplace.Name,
+		Size: workplace.Size,
 	}
 }
 

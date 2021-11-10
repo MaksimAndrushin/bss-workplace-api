@@ -13,16 +13,16 @@ import (
 )
 
 var respList = []model.Workplace {
-	{ID: 1, Foo: "elem 1"},
-	{ID: 2, Foo: "elem 2"},
-	{ID: 3, Foo: "elem 3"},
+	{ID: 1, Name: "elem 1", Size: 10},
+	{ID: 2, Name: "elem 2", Size: 10},
+	{ID: 3, Name: "elem 3", Size: 10},
 }
 
 func TestListWorkplacesV1(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.Repo.EXPECT().ListWorkplaces(gomock.Any()).Return(respList, nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().ListWorkplaces(gomock.Any()).Return(respList, nil).Times(1)
 
 	req := &pb.ListWorkplacesV1Request{}
 	resp, err := apiFixture.Api.ListWorkplacesV1(context.Background(), req)
@@ -31,9 +31,9 @@ func TestListWorkplacesV1(t *testing.T) {
 	assert.NotNil(t, resp, "Response must not be nil")
 
 	var expected = []*pb.Workplace {
-		{Id: 1, Foo: "elem 1"},
-		{Id: 2, Foo: "elem 2"},
-		{Id: 3, Foo: "elem 3"},
+		{Id: 1, Name: "elem 1", Size: 10},
+		{Id: 2, Name: "elem 2", Size: 10},
+		{Id: 3, Name: "elem 3", Size: 10},
 	}
 
 	assert.Equal(t, expected, resp.GetItems(), "WorkplaceId must be %v", expected)
@@ -43,7 +43,7 @@ func TestUnsuccessfulListWorkplacesV1_Internal(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.Repo.EXPECT().ListWorkplaces(gomock.Any()).Return(nil, errors.New("Error")).Times(1)
+	apiFixture.WorkplaceService.EXPECT().ListWorkplaces(gomock.Any()).Return(nil, errors.New("Error")).Times(1)
 
 	req := &pb.ListWorkplacesV1Request{}
 	_, err := apiFixture.Api.ListWorkplacesV1(context.Background(), req)
@@ -59,7 +59,7 @@ func TestUnsuccessfulListWorkplacesV1_Notfound(t *testing.T) {
 	t.Parallel()
 	apiFixture := Setup(t)
 
-	apiFixture.Repo.EXPECT().ListWorkplaces(gomock.Any()).Return(nil, nil).Times(1)
+	apiFixture.WorkplaceService.EXPECT().ListWorkplaces(gomock.Any()).Return(nil, nil).Times(1)
 
 	req := &pb.ListWorkplacesV1Request{}
 	_, err := apiFixture.Api.ListWorkplacesV1(context.Background(), req)

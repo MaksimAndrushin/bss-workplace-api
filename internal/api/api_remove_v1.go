@@ -19,7 +19,7 @@ func (o *workplaceAPI) RemoveWorkplaceV1(
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	ok, err := o.repo.RemoveWorkplace(ctx, req.WorkplaceId)
+	ok, err := o.WorkplaceService.RemoveWorkplace(ctx, req.WorkplaceId)
 	if err != nil {
 		log.Error().Err(err).Msg("DescribeWorkplaceV1 -- failed")
 

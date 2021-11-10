@@ -34,6 +34,22 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
         "tags": [
           "BssWorkplaceApiService"
         ]
@@ -167,8 +183,12 @@
     "v1CreateWorkplaceV1Request": {
       "type": "object",
       "properties": {
-        "foo": {
+        "name": {
           "type": "string"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -215,8 +235,12 @@
           "type": "string",
           "format": "uint64"
         },
-        "foo": {
+        "name": {
           "type": "string"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64"
         },
         "created": {
           "type": "string",

@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestCreateWorkplace(t *testing.T) {
+func TestCreateWorkplaceSuccessful(t *testing.T) {
 	r, dbMock := setupWorkplaceRepo()
 
 	rows := sqlmock.NewRows([]string{"id"}).AddRow(1)
@@ -23,22 +23,42 @@ func TestCreateWorkplace(t *testing.T) {
 	require.NoError(t, err)
 }
 
-func TestDescribeWorkplace(t *testing.T) {
+func TestCreateWorkplaceUnsuccessful(t *testing.T) {
 	r, dbMock := setupWorkplaceRepo()
 
-	rows := sqlmock.NewRows([]string{"id", "name", "size", "removed", "created", "updated"}).
-		AddRow(1, "NAME 1", 10, false, time.Now(), time.Now())
+	dbMock.ExpectQuery(`INSERT INTO workplaces (name,size,removed,created,updated) VALUES ($1,$2,$3,$4,$5) RETURNING id`).
+		WithArgs("NAME 1", 10, false, "NOW()", "NOW()")
+	_, err := r.CreateWorkplace(context.Background(), "NAME 1", 10, nil)
+
+	require.Error(t, err)
+}
+
+func TestDescribeWorkplaceSuccessful(t *testing.T) {
+	r, dbMock := setupWorkplaceRepo()
+
+	rows := sqlmock.NewRows([]string{"workplace_id", "name", "size"}).
+		AddRow(1, "NAME 1", 10)
 
 	dbMock.ExpectQuery(`SELECT id, name, size FROM workplaces WHERE id = $1`).
 		WithArgs(1).
 		WillReturnRows(rows)
 
-	_, err := r.DescribeWorkplace(context.Background(), 1, nil)
+	_, err := r.DescribeWorkplace(context.Background(), 1)
 
 	require.NoError(t, err)
 }
 
-func TestListWorkplace(t *testing.T) {
+func TestDescribeWorkplaceUnsuccessful(t *testing.T) {
+	r, dbMock := setupWorkplaceRepo()
+
+	dbMock.ExpectQuery(`SELECT id, name, size FROM workplaces WHERE id = $1`).
+		WithArgs(1)
+	_, err := r.DescribeWorkplace(context.Background(), 1)
+
+	require.Error(t, err)
+}
+
+func TestListWorkplaceSuccessful(t *testing.T) {
 	r, dbMock := setupWorkplaceRepo()
 
 	rows := sqlmock.NewRows([]string{"id", "name", "size", "removed", "created", "updated"}).
@@ -49,21 +69,41 @@ func TestListWorkplace(t *testing.T) {
 	dbMock.ExpectQuery(`SELECT * FROM workplaces WHERE removed = $1 ORDER BY id ASC LIMIT 3 OFFSET 0`).
 		WillReturnRows(rows)
 
-	_, err := r.ListWorkplaces(context.Background(), 0, 3, nil)
+	_, err := r.ListWorkplaces(context.Background(), 0, 3)
 
 	require.NoError(t, err)
 }
 
-func TestRemoveWorkplace(t *testing.T) {
+func TestListWorkplaceUnsuccessful(t *testing.T) {
+	r, dbMock := setupWorkplaceRepo()
+
+	dbMock.ExpectQuery(`SELECT * FROM workplaces WHERE removed = $1 ORDER BY id ASC LIMIT 3 OFFSET 0`)
+
+	_, err := r.ListWorkplaces(context.Background(), 0, 3)
+
+	require.Error(t, err)
+}
+
+func TestRemoveWorkplaceSuccessful(t *testing.T) {
 	r, dbMock := setupWorkplaceRepo()
 
 	dbMock.ExpectExec(`DELETE FROM workplaces WHERE id = $1`).
 		WithArgs(1).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
-	_, err := r.RemoveWorkplace(context.Background(), 1, nil)
+	_, err := r.RemoveWorkplace(context.Background(), 1)
 
 	require.NoError(t, err)
+}
+
+func TestRemoveWorkplaceUnsuccessful(t *testing.T) {
+	r, dbMock := setupWorkplaceRepo()
+
+	dbMock.ExpectExec(`DELETE FROM workplaces WHERE id = $1`).
+		WithArgs(1)
+	_, err := r.RemoveWorkplace(context.Background(), 1)
+
+	require.Error(t, err)
 }
 
 func setupWorkplaceRepo() (*workplaceRepo, sqlmock.Sqlmock) {

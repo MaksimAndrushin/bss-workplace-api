@@ -51,44 +51,44 @@ func (mr *MockWorkplaceEventRepoMockRecorder) Add(arg0, arg1, arg2 interface{}) 
 }
 
 // Lock mocks base method.
-func (m *MockWorkplaceEventRepo) Lock(arg0 context.Context, arg1 uint64, arg2 *sqlx.Tx) ([]model.WorkplaceEvent, error) {
+func (m *MockWorkplaceEventRepo) Lock(arg0 context.Context, arg1 uint64) ([]model.WorkplaceEvent, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Lock", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Lock", arg0, arg1)
 	ret0, _ := ret[0].([]model.WorkplaceEvent)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Lock indicates an expected call of Lock.
-func (mr *MockWorkplaceEventRepoMockRecorder) Lock(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockWorkplaceEventRepoMockRecorder) Lock(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Lock", reflect.TypeOf((*MockWorkplaceEventRepo)(nil).Lock), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Lock", reflect.TypeOf((*MockWorkplaceEventRepo)(nil).Lock), arg0, arg1)
 }
 
 // Remove mocks base method.
-func (m *MockWorkplaceEventRepo) Remove(arg0 context.Context, arg1 []uint64, arg2 *sqlx.Tx) error {
+func (m *MockWorkplaceEventRepo) Remove(arg0 context.Context, arg1 []uint64) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Remove", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Remove", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Remove indicates an expected call of Remove.
-func (mr *MockWorkplaceEventRepoMockRecorder) Remove(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockWorkplaceEventRepoMockRecorder) Remove(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockWorkplaceEventRepo)(nil).Remove), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockWorkplaceEventRepo)(nil).Remove), arg0, arg1)
 }
 
 // Unlock mocks base method.
-func (m *MockWorkplaceEventRepo) Unlock(arg0 context.Context, arg1 []uint64, arg2 *sqlx.Tx) error {
+func (m *MockWorkplaceEventRepo) Unlock(arg0 context.Context, arg1 []uint64) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Unlock", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "Unlock", arg0, arg1)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Unlock indicates an expected call of Unlock.
-func (mr *MockWorkplaceEventRepoMockRecorder) Unlock(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockWorkplaceEventRepoMockRecorder) Unlock(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unlock", reflect.TypeOf((*MockWorkplaceEventRepo)(nil).Unlock), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Unlock", reflect.TypeOf((*MockWorkplaceEventRepo)(nil).Unlock), arg0, arg1)
 }

@@ -12,9 +12,9 @@ import (
 // WorkplaceRepo is DAO for workplace
 type WorkplaceRepo interface {
 	CreateWorkplace(ctx context.Context, name string, size uint32, tx *sqlx.Tx) (uint64, error)
-	DescribeWorkplace(ctx context.Context, workplaceID uint64, tx *sqlx.Tx) (*model.Workplace, error)
-	ListWorkplaces(ctx context.Context, offset uint64, limit uint64, tx *sqlx.Tx) ([]model.Workplace, error)
-	RemoveWorkplace(ctx context.Context, workplaceID uint64, tx *sqlx.Tx) (bool, error)
+	DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error)
+	ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error)
+	RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error)
 }
 
 type workplaceRepo struct {
@@ -22,14 +22,22 @@ type workplaceRepo struct {
 	batchSize uint
 }
 
+const WORKPLACES_TAB = "workplaces"
+const WORKPLACES_ID = "id"
+const WORKPLACES_NAME = "name"
+const WORKPLACES_SIZE = "size"
+const WORKPLACES_REMOVED = "removed"
+const WORKPLACES_CREATED = "created"
+const WORKPLACES_UPDATED = "updated"
+
 // NewWorkplaceRepo returns WorkplaceRepo interface
 func NewWorkplaceRepo(db *sqlx.DB, batchSize uint) WorkplaceRepo {
 	return &workplaceRepo{db: db, batchSize: batchSize}
 }
 
 func (r *workplaceRepo) CreateWorkplace(ctx context.Context, name string, size uint32, tx *sqlx.Tx) (uint64, error) {
-	query := sq.Insert("workplaces").PlaceholderFormat(sq.Dollar).
-		Columns("name", "size", "removed", "created", "updated").
+	query := sq.Insert(WORKPLACES_TAB).PlaceholderFormat(sq.Dollar).
+		Columns(WORKPLACES_NAME, WORKPLACES_SIZE, WORKPLACES_REMOVED, WORKPLACES_CREATED, WORKPLACES_UPDATED).
 		Values(name, size, false, "NOW()", "NOW()").
 		Suffix("RETURNING id")
 
@@ -59,33 +67,30 @@ func (r *workplaceRepo) CreateWorkplace(ctx context.Context, name string, size u
 	}
 }
 
-func (r *workplaceRepo) DescribeWorkplace(ctx context.Context, workplaceID uint64, tx *sqlx.Tx) (*model.Workplace, error) {
-	query := sq.Select("id, name, size").PlaceholderFormat(sq.Dollar).
-		From("workplaces").
-		Where(sq.Eq{"id": workplaceID})
+func (r *workplaceRepo) DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error) {
+
+	query := sq.Select(WORKPLACES_ID, WORKPLACES_NAME, WORKPLACES_SIZE).PlaceholderFormat(sq.Dollar).
+		From(WORKPLACES_TAB).
+		Where(sq.Eq{WORKPLACES_ID: workplaceID})
 
 	s, args, err := query.ToSql()
 	if err != nil {
 		return nil, err
 	}
 
-	var workplace []model.Workplace
-	err = r.db.SelectContext(ctx, &workplace, s, args...)
+	var workplace model.Workplace
+	err = r.db.QueryRowxContext(ctx, s, args...).Scan(&workplace.ID, &workplace.Name, &workplace.Size)
 	if err != nil {
 		return nil, err
 	}
 
-	if len(workplace) == 0 {
-		return nil, nil
-	}
-
-	return &workplace[0], err
+	return &workplace, err
 }
 
-func (r *workplaceRepo) ListWorkplaces(ctx context.Context, offset uint64, limit uint64, tx *sqlx.Tx) ([]model.Workplace, error) {
+func (r *workplaceRepo) ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error) {
 	query := sq.Select("*").PlaceholderFormat(sq.Dollar).
-		From("workplaces").
-		Where(sq.Eq{"removed": false}).
+		From(WORKPLACES_TAB).
+		Where(sq.Eq{WORKPLACES_REMOVED: false}).
 		OrderBy("id ASC").
 		Offset(offset).
 		Limit(limit)
@@ -100,6 +105,8 @@ func (r *workplaceRepo) ListWorkplaces(ctx context.Context, offset uint64, limit
 		return nil, err
 	}
 
+	defer rows.Close()
+
 	workplaces := make([]model.Workplace, 0)
 	err = sqlx.StructScan(rows, &workplaces)
 
@@ -110,16 +117,16 @@ func (r *workplaceRepo) ListWorkplaces(ctx context.Context, offset uint64, limit
 	return workplaces, err
 }
 
-func (r *workplaceRepo) RemoveWorkplace(ctx context.Context, workplaceID uint64, tx *sqlx.Tx) (bool, error) {
-	query := sq.Delete("workplaces").PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{"id": workplaceID})
+func (r *workplaceRepo) RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error) {
+	query := sq.Delete(WORKPLACES_TAB).PlaceholderFormat(sq.Dollar).
+		Where(sq.Eq{WORKPLACES_ID: workplaceID})
 
 	s, args, err := query.ToSql()
 	if err != nil {
 		return false, err
 	}
 
-	_, err = r.getExecerContext(tx).ExecContext(ctx, s, args...)
+	_, err = r.db.ExecContext(ctx, s, args...)
 	if err != nil {
 		return false, err
 	}

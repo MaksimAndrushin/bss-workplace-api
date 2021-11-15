@@ -52,46 +52,46 @@ func (mr *MockWorkplaceRepoMockRecorder) CreateWorkplace(arg0, arg1, arg2, arg3 
 }
 
 // DescribeWorkplace mocks base method.
-func (m *MockWorkplaceRepo) DescribeWorkplace(arg0 context.Context, arg1 uint64, arg2 *sqlx.Tx) (*model.Workplace, error) {
+func (m *MockWorkplaceRepo) DescribeWorkplace(arg0 context.Context, arg1 uint64) (*model.Workplace, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DescribeWorkplace", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "DescribeWorkplace", arg0, arg1)
 	ret0, _ := ret[0].(*model.Workplace)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DescribeWorkplace indicates an expected call of DescribeWorkplace.
-func (mr *MockWorkplaceRepoMockRecorder) DescribeWorkplace(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockWorkplaceRepoMockRecorder) DescribeWorkplace(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeWorkplace", reflect.TypeOf((*MockWorkplaceRepo)(nil).DescribeWorkplace), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeWorkplace", reflect.TypeOf((*MockWorkplaceRepo)(nil).DescribeWorkplace), arg0, arg1)
 }
 
 // ListWorkplaces mocks base method.
-func (m *MockWorkplaceRepo) ListWorkplaces(arg0 context.Context, arg1 *sqlx.Tx) ([]model.Workplace, error) {
+func (m *MockWorkplaceRepo) ListWorkplaces(arg0 context.Context, arg1, arg2 uint64) ([]model.Workplace, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ListWorkplaces", arg0, arg1)
+	ret := m.ctrl.Call(m, "ListWorkplaces", arg0, arg1, arg2)
 	ret0, _ := ret[0].([]model.Workplace)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ListWorkplaces indicates an expected call of ListWorkplaces.
-func (mr *MockWorkplaceRepoMockRecorder) ListWorkplaces(arg0, arg1 interface{}) *gomock.Call {
+func (mr *MockWorkplaceRepoMockRecorder) ListWorkplaces(arg0, arg1, arg2 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListWorkplaces", reflect.TypeOf((*MockWorkplaceRepo)(nil).ListWorkplaces), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListWorkplaces", reflect.TypeOf((*MockWorkplaceRepo)(nil).ListWorkplaces), arg0, arg1, arg2)
 }
 
 // RemoveWorkplace mocks base method.
-func (m *MockWorkplaceRepo) RemoveWorkplace(arg0 context.Context, arg1 uint64, arg2 *sqlx.Tx) (bool, error) {
+func (m *MockWorkplaceRepo) RemoveWorkplace(arg0 context.Context, arg1 uint64) (bool, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RemoveWorkplace", arg0, arg1, arg2)
+	ret := m.ctrl.Call(m, "RemoveWorkplace", arg0, arg1)
 	ret0, _ := ret[0].(bool)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // RemoveWorkplace indicates an expected call of RemoveWorkplace.
-func (mr *MockWorkplaceRepoMockRecorder) RemoveWorkplace(arg0, arg1, arg2 interface{}) *gomock.Call {
+func (mr *MockWorkplaceRepoMockRecorder) RemoveWorkplace(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveWorkplace", reflect.TypeOf((*MockWorkplaceRepo)(nil).RemoveWorkplace), arg0, arg1, arg2)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveWorkplace", reflect.TypeOf((*MockWorkplaceRepo)(nil).RemoveWorkplace), arg0, arg1)
 }

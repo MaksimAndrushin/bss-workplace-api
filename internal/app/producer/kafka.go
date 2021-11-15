@@ -84,7 +84,7 @@ func (p *producer) processEvent(ctx context.Context, event model.WorkplaceEvent)
 
 func (p *producer) procSendToKafkaSuccessful(ctx context.Context, event model.WorkplaceEvent) {
 	p.workerPool.Submit(func() {
-		if err := p.repo.Remove(ctx, []uint64{event.ID}, nil); err != nil {
+		if err := p.repo.Remove(ctx, []uint64{event.ID}); err != nil {
 			log.Println(fmt.Sprintf("REMOVE ERROR!!!! Event ID - %d is not deleted in DB", event.ID))
 		}
 	})
@@ -94,7 +94,7 @@ func (p *producer) procSendToKafkaUnsuccessful(ctx context.Context, event model.
 	log.Println(fmt.Sprintf("ERROR!!!! Event ID - %d not sended to kafka", event.ID))
 
 	p.workerPool.Submit(func() {
-		if err := p.repo.Unlock(ctx, []uint64{event.ID}, nil); err != nil {
+		if err := p.repo.Unlock(ctx, []uint64{event.ID}); err != nil {
 			log.Println(fmt.Sprintf("UNLOCK ERROR!!!! Event ID - %d is not unlocked in DB", event.ID))
 		}
 	})

@@ -12,11 +12,11 @@ import (
 )
 
 type WorkplaceEventRepo interface {
-	Lock(ctx context.Context, recsCount uint64, tx *sqlx.Tx) ([]model.WorkplaceEvent, error)
-	Unlock(ctx context.Context, eventIDs []uint64, tx *sqlx.Tx) error
+	Lock(ctx context.Context, recsCount uint64) ([]model.WorkplaceEvent, error)
+	Unlock(ctx context.Context, eventIDs []uint64) error
 
 	Add(ctx context.Context, event model.WorkplaceEvent, tx *sqlx.Tx) error
-	Remove(ctx context.Context, eventIDs []uint64, tx *sqlx.Tx) error
+	Remove(ctx context.Context, eventIDs []uint64) error
 }
 
 type workplaceEventRepo struct {
@@ -42,13 +42,21 @@ type workplaceEventDb struct {
 	Updated     time.Time         `db:"updated"`
 }
 
+const WORKPLACES_EVENTS_TAB = "workplaces_events"
+const WORKPLACES_EVENTS_ID = "id"
+const WORKPLACES_EVENTS_PAYLOAD = "payload"
+const WORKPLACES_EVENTS_TYPE = "type"
+const WORKPLACES_EVENTS_WORKPLACE_ID = "workplace_id"
+const WORKPLACES_EVENTS_STATUS = "status"
+const WORKPLACES_EVENTS_UPDATED = "updated"
+
 func NewWorkplaceEventRepo(db *sqlx.DB, batchSize uint) WorkplaceEventRepo {
 	return &workplaceEventRepo{db: db, batchSize: batchSize}
 }
 
 func (r *workplaceEventRepo) Add(ctx context.Context, event model.WorkplaceEvent, tx *sqlx.Tx) error {
-	query := sq.Insert("workplaces_events").PlaceholderFormat(sq.Dollar).
-		Columns("workplace_id", "type", "status", "updated", "payload").
+	query := sq.Insert(WORKPLACES_EVENTS_TAB).PlaceholderFormat(sq.Dollar).
+		Columns(WORKPLACES_EVENTS_WORKPLACE_ID, WORKPLACES_EVENTS_TYPE, WORKPLACES_EVENTS_STATUS, WORKPLACES_EVENTS_UPDATED, WORKPLACES_EVENTS_PAYLOAD).
 		Values(event.Entity.ID, event.Type, event.Status, "NOW()", event.Entity).
 		Suffix("RETURNING id")
 
@@ -58,11 +66,11 @@ func (r *workplaceEventRepo) Add(ctx context.Context, event model.WorkplaceEvent
 	}
 
 	rows, err := r.getQueryerContext(tx).QueryContext(ctx, s, args...)
-	defer rows.Close()
-
 	if err != nil {
 		return err
 	}
+
+	defer rows.Close()
 
 	if !rows.Next() {
 		return sql.ErrNoRows
@@ -71,16 +79,17 @@ func (r *workplaceEventRepo) Add(ctx context.Context, event model.WorkplaceEvent
 	return nil
 }
 
-func (r *workplaceEventRepo) Remove(ctx context.Context, eventIDs []uint64, tx *sqlx.Tx) error {
-	query := sq.Delete("workplaces_events").PlaceholderFormat(sq.Dollar).
-		Where(sq.Eq{"id": eventIDs})
+func (r *workplaceEventRepo) Remove(ctx context.Context, eventIDs []uint64) error {
+
+	query := sq.Delete(WORKPLACES_EVENTS_TAB).PlaceholderFormat(sq.Dollar).
+		Where(sq.Eq{WORKPLACES_EVENTS_ID: eventIDs})
 
 	s, args, err := query.ToSql()
 	if err != nil {
 		return err
 	}
 
-	_, err = r.getExecerContext(tx).ExecContext(ctx, s, args...)
+	_, err = r.db.ExecContext(ctx, s, args...)
 	if err != nil {
 		return err
 	}
@@ -88,7 +97,7 @@ func (r *workplaceEventRepo) Remove(ctx context.Context, eventIDs []uint64, tx *
 	return nil
 }
 
-func (r *workplaceEventRepo) Lock(ctx context.Context, recsCount uint64, tx *sqlx.Tx) ([]model.WorkplaceEvent, error) {
+func (r *workplaceEventRepo) Lock(ctx context.Context, recsCount uint64) ([]model.WorkplaceEvent, error) {
 
 	subSelSql := sq.Select("we1.id").PlaceholderFormat(sq.Dollar).
 		From("workplaces_events we1").
@@ -97,8 +106,8 @@ func (r *workplaceEventRepo) Lock(ctx context.Context, recsCount uint64, tx *sql
 		Limit(recsCount).Prefix("we0.id IN(").Suffix(")")
 
 	query := sq.Update("workplaces_events we0").PlaceholderFormat(sq.Dollar).
-		Set("status", model.Locked).
-		Set("updated", "NOW()").
+		Set(WORKPLACES_EVENTS_STATUS, model.Locked).
+		Set(WORKPLACES_EVENTS_UPDATED, "NOW()").
 		Where(subSelSql).
 		Suffix("RETURNING we0.id, we0.workplace_id, weo.type, we0.status, we0.payload, we0.updated")
 
@@ -124,18 +133,19 @@ func (r *workplaceEventRepo) Lock(ctx context.Context, recsCount uint64, tx *sql
 	return workplacesEvents, nil
 }
 
-func (r *workplaceEventRepo) Unlock(ctx context.Context, eventIDs []uint64, tx *sqlx.Tx) error {
-	query := sq.Update("workplaces_events").PlaceholderFormat(sq.Dollar).
-		Set("status", model.Deferred).
-		Set("updated_at", "NOW()").
-		Where(sq.Eq{"id": eventIDs})
+func (r *workplaceEventRepo) Unlock(ctx context.Context, eventIDs []uint64) error {
+
+	query := sq.Update(WORKPLACES_EVENTS_TAB).PlaceholderFormat(sq.Dollar).
+		Set(WORKPLACES_EVENTS_STATUS, model.Deferred).
+		Set(WORKPLACES_EVENTS_UPDATED, "NOW()").
+		Where(sq.Eq{WORKPLACES_EVENTS_ID: eventIDs})
 
 	s, args, err := query.ToSql()
 	if err != nil {
 		return err
 	}
 
-	_, err = r.getExecerContext(tx).ExecContext(ctx, s, args...)
+	_, err = r.db.ExecContext(ctx, s, args...)
 	if err != nil {
 		return err
 	}

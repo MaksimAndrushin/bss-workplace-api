@@ -59,7 +59,7 @@ func (ws *workplaceService) CreateWorkplace(ctx context.Context, name string, si
 }
 
 func (ws *workplaceService) DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error) {
-	workplace, err := ws.WorkplaceRepo.DescribeWorkplace(ctx, workplaceID, nil)
+	workplace, err := ws.WorkplaceRepo.DescribeWorkplace(ctx, workplaceID)
 	if err != nil {
 		log.Error().Err(err).Msg("DescribeWorkplaceV1 -- failed")
 		return nil, err
@@ -69,7 +69,7 @@ func (ws *workplaceService) DescribeWorkplace(ctx context.Context, workplaceID u
 }
 
 func (ws *workplaceService) ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error) {
-	workplaces, err := ws.WorkplaceRepo.ListWorkplaces(ctx, offset, limit, nil)
+	workplaces, err := ws.WorkplaceRepo.ListWorkplaces(ctx, offset, limit)
 	if err != nil {
 		log.Error().Err(err).Msg("ListWorkplacesV1 -- failed")
 		return nil, err
@@ -80,7 +80,7 @@ func (ws *workplaceService) ListWorkplaces(ctx context.Context, offset uint64, l
 }
 
 func (ws *workplaceService) RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error) {
-	ok, err := ws.WorkplaceRepo.RemoveWorkplace(ctx, workplaceID, nil)
+	ok, err := ws.WorkplaceRepo.RemoveWorkplace(ctx, workplaceID)
 	if err != nil {
 		log.Error().Err(err).Msg("DescribeWorkplaceV1 -- failed")
 		return false, err

@@ -36,6 +36,12 @@ type Database struct {
 	Driver     string `yaml:"driver"`
 }
 
+// Telemetry - contains all parameters for required telemetry
+type Telemetry struct {
+	GraylogPath string `yaml:"graylogPath"`
+}
+
+
 // Grpc - contains parameter address grpc.
 type Grpc struct {
 	Port              int    `yaml:"port"`
@@ -101,6 +107,7 @@ type Config struct {
 	Jaeger   Jaeger   `yaml:"jaeger"`
 	Kafka    Kafka    `yaml:"kafka"`
 	Status   Status   `yaml:"status"`
+	Telemetry Telemetry `yaml:"telemetry"`
 }
 
 // ReadConfigYML - read configurations from file and init instance Config.

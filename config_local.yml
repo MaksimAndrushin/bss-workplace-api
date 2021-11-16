@@ -5,18 +5,18 @@ project:
 
 grpc:
   host: 0.0.0.0
-  port: 8082
+  port: 18082
   maxConnectionIdle: 5 # Minutes
   timeout: 15 # Seconds
   maxConnectionAge: 5 # Minutes
 
 rest:
   host: 0.0.0.0
-  port: 8080
+  port: 18080
 
 metrics:
   host: 0.0.0.0
-  port: 9100
+  port: 19100
   path: /metrics
 
 jaeger:
@@ -35,7 +35,7 @@ status:
   versionPath: /version
 
 database:
-  host: postgres
+  host: 127.0.0.1
   port: 5432
   user: postgres
   password: postgres

@@ -1,8 +1,10 @@
 package api
 
 import (
+	"github.com/ozonmp/bss-workplace-api/internal/infra/logger"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/metrics"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 	pb "github.com/ozonmp/bss-workplace-api/pkg/bss-workplace-api"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -13,20 +15,26 @@ func (o *workplaceAPI) CreateWorkplaceV1(
 	req *pb.CreateWorkplaceV1Request,
 ) (*pb.CreateWorkplaceV1Response, error) {
 
-	if err := req.Validate(); err != nil {
-		log.Error().Err(err).Msg("CreateWorkplaceV1 - invalid argument")
+	logger.DebugKV(ctx, "CreateWorkplaceV1 in", "req", req)
 
+	span := tracer.CreateSpan(ctx, "API CreateWorkplaceV1")
+	defer span.Close()
+
+	if err := req.Validate(); err != nil {
+		logger.WarnKV(ctx, "CreateWorkplaceV1 - invalid argument", "req", req)
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
+	metrics.IncCudCount(metrics.Created)
+
 	workplaceId, err := o.WorkplaceService.CreateWorkplace(ctx, req.GetName(), req.GetSize())
 	if err != nil {
-		log.Error().Err(err).Msg("CreateWorkplaceV1 -- failed")
-
+		logger.ErrorKV(ctx, "CreateWorkplaceV1 - failed", "err", err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	log.Debug().Uint64("workplaceId", workplaceId).Msg("Workplace was created")
+	logger.DebugKV(ctx, "CreateWorkplaceV1 - successful", "workplaceId", workplaceId)
+	logger.DebugKV(ctx, "CreateWorkplaceV1 out")
 
 	return &pb.CreateWorkplaceV1Response{
 		WorkplaceId: workplaceId,

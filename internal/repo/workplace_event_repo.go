@@ -6,6 +6,8 @@ import (
 	"errors"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/metrics"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 	"golang.org/x/net/context"
 	"time"
@@ -55,6 +57,10 @@ func NewWorkplaceEventRepo(db *sqlx.DB, batchSize uint) WorkplaceEventRepo {
 }
 
 func (r *workplaceEventRepo) Add(ctx context.Context, event model.WorkplaceEvent, tx *sqlx.Tx) error {
+
+	span := tracer.CreateSpan(ctx, "Workplace Event Repo - Add")
+	defer span.Close()
+
 	query := sq.Insert(WORKPLACES_EVENTS_TAB).PlaceholderFormat(sq.Dollar).
 		Columns(WORKPLACES_EVENTS_WORKPLACE_ID, WORKPLACES_EVENTS_TYPE, WORKPLACES_EVENTS_STATUS, WORKPLACES_EVENTS_UPDATED, WORKPLACES_EVENTS_PAYLOAD).
 		Values(event.Entity.ID, event.Type, event.Status, "NOW()", event.Entity).
@@ -130,6 +136,9 @@ func (r *workplaceEventRepo) Lock(ctx context.Context, recsCount uint64) ([]mode
 	}
 
 	workplacesEvents := convertToWorkplaceEvents(workplacesEventsDb)
+
+	metrics.AddRetranslatorEvents(len(workplacesEvents))
+
 	return workplacesEvents, nil
 }
 

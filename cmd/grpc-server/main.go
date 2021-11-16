@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
-
-	"github.com/pressly/goose/v3"
-	"github.com/rs/zerolog"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/logger"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/metrics"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 	"github.com/rs/zerolog/log"
 
 	_ "github.com/jackc/pgx/v4"
@@ -16,7 +15,6 @@ import (
 	"github.com/ozonmp/bss-workplace-api/internal/config"
 	"github.com/ozonmp/bss-workplace-api/internal/database"
 	"github.com/ozonmp/bss-workplace-api/internal/server"
-	"github.com/ozonmp/bss-workplace-api/internal/tracer"
 )
 
 var (
@@ -24,13 +22,19 @@ var (
 )
 
 func main() {
-	if err := config.ReadConfigYML("config.yml"); err != nil {
+
+	ctx := context.Background()
+
+	var configFileName = "config.yml"
+	//var configFileName = "config_local.yml"
+
+	if err := config.ReadConfigYML(configFileName); err != nil {
 		log.Fatal().Err(err).Msg("Failed init configuration")
 	}
 	cfg := config.GetConfigInstance()
 
-	migration := flag.Bool("migration", true, "Defines the migration start option")
-	flag.Parse()
+	//migration := flag.Bool("migration", true, "Defines the migration start option")
+	//flag.Parse()
 
 	log.Info().
 		Str("version", cfg.Project.Version).
@@ -39,10 +43,8 @@ func main() {
 		Str("environment", cfg.Project.Environment).
 		Msgf("Starting service: %s", cfg.Project.Name)
 
-	// default: zerolog.SetGlobalLevel(zerolog.InfoLevel)
-	if cfg.Project.Debug {
-		zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	}
+	syncLogger := logger.InitLogger(ctx, cfg)
+	defer syncLogger()
 
 	dsn := fmt.Sprintf("host=%v port=%v user=%v password=%v dbname=%v sslmode=%v",
 		cfg.Database.Host,
@@ -53,34 +55,34 @@ func main() {
 		cfg.Database.SslMode,
 	)
 
-//	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", cfg.Database.User, cfg.Database.Password, cfg.Database.Host, cfg.Database.Port, cfg.Database.Name)
-
-	db, err := database.NewPostgres(context.Background(), dsn, cfg.Database.Driver)
+	db, err := database.NewPostgres(ctx, dsn, cfg.Database.Driver)
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed init postgres")
+		logger.FatalKV(ctx, "Failed init postgres", "err", err)
+		return
 	}
 	defer db.Close()
 
-	*migration = false // todo: need to delete this line for homework-4
-	if *migration {
-		if err = goose.Up(db.DB, cfg.Database.Migrations); err != nil {
-			log.Error().Err(err).Msg("Migration failed")
+	//*migration = false // todo: need to delete this line for homework-4
+	//if *migration {
+	//	if err = goose.Up(db.DB, cfg.Database.Migrations); err != nil {
+	//		log.Error().Err(err).Msg("Migration failed")
+	//
+	//		return
+	//	}
+	//}
 
-			return
-		}
-	}
+	metrics.InitMetrics(&cfg)
 
-	tracing, err := tracer.NewTracer(&cfg)
+	tracing, err := tracer.NewTracer(ctx, &cfg)
 	if err != nil {
-		log.Error().Err(err).Msg("Failed init tracing")
-
+		logger.FatalKV(ctx, "Failed init tracing", "err", err)
 		return
 	}
 	defer tracing.Close()
 
-	if err := server.NewGrpcServer(db, batchSize).Start(&cfg); err != nil {
-		log.Error().Err(err).Msg("Failed creating gRPC server")
-
+	if err := server.NewGrpcServer(db, batchSize).Start(ctx, &cfg); err != nil {
+		logger.FatalKV(ctx, "Failed creating gRPC server", "err", err)
 		return
 	}
 }
+

@@ -4,9 +4,10 @@ import (
 	"context"
 	"github.com/jmoiron/sqlx"
 	"github.com/ozonmp/bss-workplace-api/internal/database"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/logger"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 	"github.com/ozonmp/bss-workplace-api/internal/repo"
-	"github.com/rs/zerolog/log"
 )
 
 type WorkplaceService interface {
@@ -32,6 +33,9 @@ func NewWorkplaceService(workplaceRepo repo.WorkplaceRepo, workplaceEventRepo re
 
 func (ws *workplaceService) CreateWorkplace(ctx context.Context, name string, size uint32) (uint64, error) {
 
+	span := tracer.CreateSpan(ctx, "Service CreateWorkplace")
+	defer span.Close()
+
 	var workplaceId uint64
 	err := database.WithTx(ctx, ws.DbHolder, func(ctx context.Context, tx *sqlx.Tx) error {
 
@@ -52,6 +56,7 @@ func (ws *workplaceService) CreateWorkplace(ctx context.Context, name string, si
 	})
 
 	if err != nil {
+		logger.ErrorKV(ctx, "CreateWorkplace -- failed", "err", err)
 		return 0, err
 	}
 
@@ -59,9 +64,12 @@ func (ws *workplaceService) CreateWorkplace(ctx context.Context, name string, si
 }
 
 func (ws *workplaceService) DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error) {
+	span := tracer.CreateSpan(ctx, "Service DescribeWorkplace")
+	defer span.Close()
+
 	workplace, err := ws.WorkplaceRepo.DescribeWorkplace(ctx, workplaceID)
 	if err != nil {
-		log.Error().Err(err).Msg("DescribeWorkplaceV1 -- failed")
+		logger.ErrorKV(ctx, "DescribeWorkplace -- failed", "err", err)
 		return nil, err
 	}
 
@@ -69,9 +77,12 @@ func (ws *workplaceService) DescribeWorkplace(ctx context.Context, workplaceID u
 }
 
 func (ws *workplaceService) ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error) {
+	span := tracer.CreateSpan(ctx, "Service ListWorkplaces")
+	defer span.Close()
+
 	workplaces, err := ws.WorkplaceRepo.ListWorkplaces(ctx, offset, limit)
 	if err != nil {
-		log.Error().Err(err).Msg("ListWorkplacesV1 -- failed")
+		logger.ErrorKV(ctx, "ListWorkplaces -- failed", "err", err)
 		return nil, err
 	}
 
@@ -80,9 +91,12 @@ func (ws *workplaceService) ListWorkplaces(ctx context.Context, offset uint64, l
 }
 
 func (ws *workplaceService) RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error) {
+	span := tracer.CreateSpan(ctx, "Service RemoveWorkplace")
+	defer span.Close()
+
 	ok, err := ws.WorkplaceRepo.RemoveWorkplace(ctx, workplaceID)
 	if err != nil {
-		log.Error().Err(err).Msg("DescribeWorkplaceV1 -- failed")
+		logger.ErrorKV(ctx, "RemoveWorkplace -- failed", "err", err)
 		return false, err
 	}
 

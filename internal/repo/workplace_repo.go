@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 
 	"github.com/ozonmp/bss-workplace-api/internal/model"
 )
@@ -36,6 +37,10 @@ func NewWorkplaceRepo(db *sqlx.DB, batchSize uint) WorkplaceRepo {
 }
 
 func (r *workplaceRepo) CreateWorkplace(ctx context.Context, name string, size uint32, tx *sqlx.Tx) (uint64, error) {
+
+	span := tracer.CreateSpan(ctx, "Workplace Repo CreateWorkplace")
+	defer span.Close()
+
 	query := sq.Insert(WORKPLACES_TAB).PlaceholderFormat(sq.Dollar).
 		Columns(WORKPLACES_NAME, WORKPLACES_SIZE, WORKPLACES_REMOVED, WORKPLACES_CREATED, WORKPLACES_UPDATED).
 		Values(name, size, false, "NOW()", "NOW()").
@@ -68,6 +73,8 @@ func (r *workplaceRepo) CreateWorkplace(ctx context.Context, name string, size u
 }
 
 func (r *workplaceRepo) DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error) {
+	span := tracer.CreateSpan(ctx, "Workplace Repo DescribeWorkplace")
+	defer span.Close()
 
 	query := sq.Select(WORKPLACES_ID, WORKPLACES_NAME, WORKPLACES_SIZE).PlaceholderFormat(sq.Dollar).
 		From(WORKPLACES_TAB).
@@ -88,6 +95,9 @@ func (r *workplaceRepo) DescribeWorkplace(ctx context.Context, workplaceID uint6
 }
 
 func (r *workplaceRepo) ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error) {
+	span := tracer.CreateSpan(ctx, "Workplace Repo ListWorkplaces")
+	defer span.Close()
+
 	query := sq.Select("*").PlaceholderFormat(sq.Dollar).
 		From(WORKPLACES_TAB).
 		Where(sq.Eq{WORKPLACES_REMOVED: false}).
@@ -118,6 +128,9 @@ func (r *workplaceRepo) ListWorkplaces(ctx context.Context, offset uint64, limit
 }
 
 func (r *workplaceRepo) RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error) {
+	span := tracer.CreateSpan(ctx, "Workplace Repo RemoveWorkplace")
+	defer span.Close()
+
 	query := sq.Delete(WORKPLACES_TAB).PlaceholderFormat(sq.Dollar).
 		Where(sq.Eq{WORKPLACES_ID: workplaceID})
 
@@ -126,9 +139,18 @@ func (r *workplaceRepo) RemoveWorkplace(ctx context.Context, workplaceID uint64)
 		return false, err
 	}
 
-	_, err = r.db.ExecContext(ctx, s, args...)
+	res, err := r.db.ExecContext(ctx, s, args...)
 	if err != nil {
 		return false, err
+	}
+
+	deletedRowsCount, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+
+	if deletedRowsCount == 0 {
+		return false, nil
 	}
 
 	return true, nil

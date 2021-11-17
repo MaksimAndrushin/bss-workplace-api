@@ -77,7 +77,7 @@ func (s *GrpcServer) Start(ctx context.Context, cfg *config.Config) error {
 	isReady := &atomic.Value{}
 	isReady.Store(false)
 
-	statusServer := createStatusServer(cfg, isReady)
+	statusServer := createStatusServer(ctx, cfg, isReady)
 
 	go func() {
 		statusAdrr := fmt.Sprintf("%s:%v", cfg.Status.Host, cfg.Status.Port)

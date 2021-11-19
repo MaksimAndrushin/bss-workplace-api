@@ -1,5 +1,36 @@
 # Ozon Marketplace Workplace API
 
+##Задание 5
+
+###Логирование
+
+Добавить поддержку детализированного вывода запроса и ответа через middleware
+```zsh
+сделано - реализация в пакете server/middleware, raw_request_logger.go и raw_response_logger.go 
+```
+
+
+Добавить отображение в swagger отладочных заголовков
+```zsh
+сделано - добавил в bss_workplace_api.swagger.json, в каждый метод:
+
+          {
+            "name": "Grpc-Metadata-log-level",
+            "in": "header",
+            "required": false,
+            "type": "string",
+            "format": "string"
+          }
+ 
+```
+
+###Метрики
+Добавить dashboard на отображение метрик
+```zsh
+с графаной поигрался, посоздавал разные дашборды 
+```
+
+
 ##Задание 4
 
 Реализовать методы для интерфейса Repo - 

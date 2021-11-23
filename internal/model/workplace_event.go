@@ -15,9 +15,8 @@ const (
 )
 
 type WorkplaceEvent struct {
-	ID     uint64
-	Type   EventType
-	Status EventStatus
-	Entity *Workplace
+	ID          uint64
+	Type        EventType
+	Status      EventStatus
+	Entity      *Workplace
 }
-

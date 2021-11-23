@@ -3,9 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/ozonmp/bss-workplace-api/internal/app/retranslator"
+	"github.com/ozonmp/bss-workplace-api/internal/app/sender"
 	"github.com/ozonmp/bss-workplace-api/internal/infra/logger"
 	"github.com/ozonmp/bss-workplace-api/internal/infra/metrics"
 	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
+	"github.com/ozonmp/bss-workplace-api/internal/repo"
 	"github.com/rs/zerolog/log"
 
 	_ "github.com/jackc/pgx/v4"
@@ -80,9 +83,30 @@ func main() {
 	}
 	defer tracing.Close()
 
+	workplaceEventRepo := repo.NewWorkplaceEventRepo(db, batchSize)
+
+	kafkaEventSender, err := sender.NewKafkaSender(cfg.Kafka.Brokers, cfg.Kafka.Topic)
+	if err != nil {
+		panic(err)
+	}
+
+	var retranslatorConfig = retranslator.RetranslatorConfig{
+		ChannelSize:    512,
+		ConsumerCount:  2,
+		ConsumeSize:    10,
+		ProducerCount:  28,
+		WorkerCount:    2,
+		ConsumeTimeout: 5,
+		Repo:           workplaceEventRepo,
+		Sender:         kafkaEventSender,
+	}
+
+	var retranslator = retranslator.NewRetranslator(retranslatorConfig)
+	retranslator.Start(ctx)
+
 	if err := server.NewGrpcServer(db, batchSize).Start(ctx, &cfg); err != nil {
 		logger.FatalKV(ctx, "Failed creating gRPC server", "err", err)
 		return
 	}
-}
 
+}

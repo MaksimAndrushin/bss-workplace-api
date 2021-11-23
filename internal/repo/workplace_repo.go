@@ -16,6 +16,7 @@ type WorkplaceRepo interface {
 	DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error)
 	ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error)
 	RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error)
+	UpdateWorkplace(ctx context.Context, workplace model.Workplace, tx *sqlx.Tx) (bool, error)
 }
 
 type workplaceRepo struct {
@@ -150,6 +151,38 @@ func (r *workplaceRepo) RemoveWorkplace(ctx context.Context, workplaceID uint64)
 	}
 
 	if deletedRowsCount == 0 {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (r *workplaceRepo) UpdateWorkplace(ctx context.Context, workplace model.Workplace, tx *sqlx.Tx) (bool, error) {
+	span := tracer.CreateSpan(ctx, "Workplace Repo UpdateWorkplace")
+	defer span.Close()
+
+	query := sq.Update(WORKPLACES_TAB).PlaceholderFormat(sq.Dollar).
+		Set(WORKPLACES_NAME, workplace.Name).
+		Set(WORKPLACES_SIZE, workplace.Size).
+		Set(WORKPLACES_UPDATED, "NOW()").
+		Where(sq.Eq{WORKPLACES_ID: workplace.ID})
+
+	s, args, err := query.ToSql()
+	if err != nil {
+		return false, err
+	}
+
+	res, err := r.getExecerContext(tx).ExecContext(ctx, s, args...)
+	if err != nil {
+		return false, err
+	}
+
+	updatedRowsCount, err := res.RowsAffected()
+	if err != nil {
+		return false, err
+	}
+
+	if updatedRowsCount == 0 {
 		return false, nil
 	}
 

@@ -49,5 +49,6 @@ kafka:
   topic: "bss-workplace-events"
   groupId: "bss-workplace-api"
   brokers:
-    - "kafka:9092"
-    - "localhost:9094"
+    - "kafka-1:9092"
+    - "kafka-2:9092"
+    - "kafka-3:9092"

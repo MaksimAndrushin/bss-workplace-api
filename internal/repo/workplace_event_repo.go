@@ -6,6 +6,7 @@ import (
 	"errors"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
+	"github.com/ozonmp/bss-workplace-api/internal/infra/logger"
 	"github.com/ozonmp/bss-workplace-api/internal/infra/metrics"
 	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 	"github.com/ozonmp/bss-workplace-api/internal/model"
@@ -26,7 +27,7 @@ type workplaceEventRepo struct {
 	batchSize uint
 }
 
-type WorkplaceEntity struct {
+type workplaceEntity struct {
 	ID      uint64    `db:"id"`
 	Name    string    `db:"name"`
 	Size    uint32    `db:"size"`
@@ -40,7 +41,7 @@ type workplaceEventDb struct {
 	WorkplaceId uint64            `db:"workplace_id"`
 	Type        model.EventType   `db:"type"`
 	Status      model.EventStatus `db:"status"`
-	Entity      WorkplaceEntity   `db:"payload"`
+	Entity      workplaceEntity   `db:"payload"`
 	Updated     time.Time         `db:"updated"`
 }
 
@@ -78,11 +79,20 @@ func (r *workplaceEventRepo) Add(ctx context.Context, event model.WorkplaceEvent
 
 	defer rows.Close()
 
-	if !rows.Next() {
+	var id uint64
+	if rows.Next() {
+		err = rows.Scan(&id)
+
+		if err != nil {
+			return err
+		}
+
+		logger.DebugKV(ctx, "Created event ", "id", id)
+
+		return nil
+	} else {
 		return sql.ErrNoRows
 	}
-
-	return nil
 }
 
 func (r *workplaceEventRepo) Remove(ctx context.Context, eventIDs []uint64) error {
@@ -115,7 +125,7 @@ func (r *workplaceEventRepo) Lock(ctx context.Context, recsCount uint64) ([]mode
 		Set(WORKPLACES_EVENTS_STATUS, model.Locked).
 		Set(WORKPLACES_EVENTS_UPDATED, "NOW()").
 		Where(subSelSql).
-		Suffix("RETURNING we0.id, we0.workplace_id, weo.type, we0.status, we0.payload, we0.updated")
+		Suffix("RETURNING we0.id, we0.workplace_id, we0.type, we0.status, we0.payload, we0.updated")
 
 	s, args, err := query.ToSql()
 	if err != nil {
@@ -195,7 +205,7 @@ func convertToWorkplaceEvents(workplacesEventsDb []*workplaceEventDb) []model.Wo
 	return workplaceEvents
 }
 
-func (w *WorkplaceEntity) Scan(src interface{}) error {
+func (w *workplaceEntity) Scan(src interface{}) error {
 	var source []byte
 	switch src.(type) {
 	case string:
@@ -214,7 +224,7 @@ func (w *WorkplaceEntity) Scan(src interface{}) error {
 		return err
 	}
 
-	w = &WorkplaceEntity{
+	*w = workplaceEntity{
 		ID:   res.ID,
 		Name: res.Name,
 		Size: res.Size,

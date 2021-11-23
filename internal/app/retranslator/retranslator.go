@@ -18,7 +18,7 @@ type Retranslator interface {
 	Close()
 }
 
-type Config struct {
+type RetranslatorConfig struct {
 	ChannelSize uint64
 
 	ConsumerCount  uint64
@@ -39,7 +39,7 @@ type retranslator struct {
 	workerPool *workerpool.WorkerPool
 }
 
-func NewRetranslator(cfg Config) Retranslator {
+func NewRetranslator(cfg RetranslatorConfig) Retranslator {
 	events := make(chan model.WorkplaceEvent, cfg.ChannelSize)
 	workerPool := workerpool.New(cfg.WorkerCount)
 
@@ -50,12 +50,14 @@ func NewRetranslator(cfg Config) Retranslator {
 		cfg.Repo,
 		events)
 
+
 	producer := producer.NewKafkaProducer(
 		cfg.ProducerCount,
 		cfg.Sender,
 		events,
 		workerPool,
-		cfg.Repo)
+		cfg.Repo,
+		)
 
 	return &retranslator{
 		events:     events,

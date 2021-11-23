@@ -26,6 +26,8 @@ type BssWorkplaceApiServiceClient interface {
 	ListWorkplacesV1(ctx context.Context, in *ListWorkplacesV1Request, opts ...grpc.CallOption) (*ListWorkplacesV1Response, error)
 	// RemoveWorkplaceV1 - Remove a workplace
 	RemoveWorkplaceV1(ctx context.Context, in *RemoveWorkplaceV1Request, opts ...grpc.CallOption) (*RemoveWorkplaceV1Response, error)
+	// UpdateWorkplaceV1 - Update a workplace
+	UpdateWorkplaceV1(ctx context.Context, in *UpdateWorkplaceV1Request, opts ...grpc.CallOption) (*UpdateWorkplaceV1Response, error)
 }
 
 type bssWorkplaceApiServiceClient struct {
@@ -72,6 +74,15 @@ func (c *bssWorkplaceApiServiceClient) RemoveWorkplaceV1(ctx context.Context, in
 	return out, nil
 }
 
+func (c *bssWorkplaceApiServiceClient) UpdateWorkplaceV1(ctx context.Context, in *UpdateWorkplaceV1Request, opts ...grpc.CallOption) (*UpdateWorkplaceV1Response, error) {
+	out := new(UpdateWorkplaceV1Response)
+	err := c.cc.Invoke(ctx, "/ozonmp.bss_workplace_api.v1.BssWorkplaceApiService/UpdateWorkplaceV1", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BssWorkplaceApiServiceServer is the server API for BssWorkplaceApiService service.
 // All implementations must embed UnimplementedBssWorkplaceApiServiceServer
 // for forward compatibility
@@ -84,6 +95,8 @@ type BssWorkplaceApiServiceServer interface {
 	ListWorkplacesV1(context.Context, *ListWorkplacesV1Request) (*ListWorkplacesV1Response, error)
 	// RemoveWorkplaceV1 - Remove a workplace
 	RemoveWorkplaceV1(context.Context, *RemoveWorkplaceV1Request) (*RemoveWorkplaceV1Response, error)
+	// UpdateWorkplaceV1 - Update a workplace
+	UpdateWorkplaceV1(context.Context, *UpdateWorkplaceV1Request) (*UpdateWorkplaceV1Response, error)
 	mustEmbedUnimplementedBssWorkplaceApiServiceServer()
 }
 
@@ -102,6 +115,9 @@ func (UnimplementedBssWorkplaceApiServiceServer) ListWorkplacesV1(context.Contex
 }
 func (UnimplementedBssWorkplaceApiServiceServer) RemoveWorkplaceV1(context.Context, *RemoveWorkplaceV1Request) (*RemoveWorkplaceV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RemoveWorkplaceV1 not implemented")
+}
+func (UnimplementedBssWorkplaceApiServiceServer) UpdateWorkplaceV1(context.Context, *UpdateWorkplaceV1Request) (*UpdateWorkplaceV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateWorkplaceV1 not implemented")
 }
 func (UnimplementedBssWorkplaceApiServiceServer) mustEmbedUnimplementedBssWorkplaceApiServiceServer() {
 }
@@ -189,6 +205,24 @@ func _BssWorkplaceApiService_RemoveWorkplaceV1_Handler(srv interface{}, ctx cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BssWorkplaceApiService_UpdateWorkplaceV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateWorkplaceV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BssWorkplaceApiServiceServer).UpdateWorkplaceV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ozonmp.bss_workplace_api.v1.BssWorkplaceApiService/UpdateWorkplaceV1",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BssWorkplaceApiServiceServer).UpdateWorkplaceV1(ctx, req.(*UpdateWorkplaceV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BssWorkplaceApiService_ServiceDesc is the grpc.ServiceDesc for BssWorkplaceApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -211,6 +245,10 @@ var BssWorkplaceApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RemoveWorkplaceV1",
 			Handler:    _BssWorkplaceApiService_RemoveWorkplaceV1_Handler,
+		},
+		{
+			MethodName: "UpdateWorkplaceV1",
+			Handler:    _BssWorkplaceApiService_UpdateWorkplaceV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -94,3 +94,18 @@ func (mr *MockWorkplaceServiceMockRecorder) RemoveWorkplace(arg0, arg1 interface
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveWorkplace", reflect.TypeOf((*MockWorkplaceService)(nil).RemoveWorkplace), arg0, arg1)
 }
+
+// UpdateWorkplace mocks base method.
+func (m *MockWorkplaceService) UpdateWorkplace(arg0 context.Context, arg1 model.Workplace) (bool, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateWorkplace", arg0, arg1)
+	ret0, _ := ret[0].(bool)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateWorkplace indicates an expected call of UpdateWorkplace.
+func (mr *MockWorkplaceServiceMockRecorder) UpdateWorkplace(arg0, arg1 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateWorkplace", reflect.TypeOf((*MockWorkplaceService)(nil).UpdateWorkplace), arg0, arg1)
+}

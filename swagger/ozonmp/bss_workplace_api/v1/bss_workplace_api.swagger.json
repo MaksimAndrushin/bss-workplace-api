@@ -48,13 +48,6 @@
             "required": false,
             "type": "string",
             "format": "uint64"
-          },
-          {
-            "name": "Grpc-Metadata-log-level",
-            "in": "header",
-            "required": false,
-            "type": "string",
-            "format": "string"
           }
         ],
         "tags": [
@@ -86,13 +79,37 @@
             "schema": {
               "$ref": "#/definitions/v1CreateWorkplaceV1Request"
             }
+          }
+        ],
+        "tags": [
+          "BssWorkplaceApiService"
+        ]
+      },
+      "put": {
+        "summary": "UpdateWorkplaceV1 - Update a workplace",
+        "operationId": "BssWorkplaceApiService_UpdateWorkplaceV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1UpdateWorkplaceV1Response"
+            }
           },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
           {
-            "name": "Grpc-Metadata-log-level",
-            "in": "header",
-            "required": false,
-            "type": "string",
-            "format": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1UpdateWorkplaceV1Request"
+            }
           }
         ],
         "tags": [
@@ -125,13 +142,6 @@
             "required": true,
             "type": "string",
             "format": "uint64"
-          },
-          {
-            "name": "Grpc-Metadata-log-level",
-            "in": "header",
-            "required": false,
-            "type": "string",
-            "format": "string"
           }
         ],
         "tags": [
@@ -162,13 +172,6 @@
             "required": true,
             "type": "string",
             "format": "uint64"
-          },
-          {
-            "name": "Grpc-Metadata-log-level",
-            "in": "header",
-            "required": false,
-            "type": "string",
-            "format": "string"
           }
         ],
         "tags": [
@@ -252,6 +255,22 @@
       "type": "object",
       "properties": {
         "found": {
+          "type": "boolean"
+        }
+      }
+    },
+    "v1UpdateWorkplaceV1Request": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "$ref": "#/definitions/v1Workplace"
+        }
+      }
+    },
+    "v1UpdateWorkplaceV1Response": {
+      "type": "object",
+      "properties": {
+        "updated": {
           "type": "boolean"
         }
       }

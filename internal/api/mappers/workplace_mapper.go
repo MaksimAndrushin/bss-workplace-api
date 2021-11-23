@@ -22,3 +22,12 @@ func WorkplacesToListItems(workplaces []model.Workplace) []*pb.Workplace {
 
 	return items
 }
+
+func WorkplacePBToWorkplaceModel(workplace pb.Workplace) *model.Workplace {
+	return &model.Workplace{
+		ID: workplace.GetId(),
+		Name: workplace.GetName(),
+		Size: workplace.GetSize(),
+		Created: workplace.GetCreated().AsTime(),
+	}
+}

@@ -38,6 +38,14 @@ service BssWorkplaceApiService {
       delete: "/v1/workplaces/{workplace_id}"
     };
   }
+
+  // UpdateWorkplaceV1 - Update a workplace
+  rpc UpdateWorkplaceV1(UpdateWorkplaceV1Request) returns (UpdateWorkplaceV1Response) {
+    option (google.api.http) = {
+      put: "/v1/workplaces"
+      body: "*"
+    };
+  }
 }
 
 message Workplace {
@@ -79,4 +87,19 @@ message RemoveWorkplaceV1Request {
 
 message RemoveWorkplaceV1Response {
   bool found = 1;
+}
+
+message UpdateWorkplaceV1Request {
+  Workplace value = 1;
+}
+
+message UpdateWorkplaceV1Response {
+  bool updated = 1;
+}
+
+message WorkplaceEvent {
+  uint64 id = 1;
+  uint32 event_type = 2;
+  uint32 event_status = 3;
+  Workplace workplace = 4;
 }

@@ -19,7 +19,7 @@ func TestLockSuccessful(t *testing.T) {
 	dbMock.ExpectQuery(`UPDATE workplaces_events we0 SET status = $1, updated = $2 
                                    WHERE we0.id IN( 
                                       SELECT we1.id FROM workplaces_events we1 WHERE we1.status = $3 ORDER BY we1.id ASC LIMIT 10 ) 
-                                   RETURNING we0.id, we0.workplace_id, weo.type, we0.status, we0.payload, we0.updated`).
+                                   RETURNING we0.id, we0.workplace_id, we0.type, we0.status, we0.payload, we0.updated`).
 		WithArgs(model.Locked, "NOW()", model.Deferred).
 		WillReturnRows(rows)
 
@@ -34,7 +34,7 @@ func TestLockUnsuccessful(t *testing.T) {
 	dbMock.ExpectQuery(`UPDATE workplaces_events we0 SET status = $1, updated = $2 
                                    WHERE we0.id IN( 
                                       SELECT we1.id FROM workplaces_events we1 WHERE we1.status = $3 ORDER BY we1.id ASC LIMIT 10 ) 
-                                   RETURNING we0.id, we0.workplace_id, weo.type, we0.status, we0.payload, we0.updated`).
+                                   RETURNING we0.id, we0.workplace_id, we0.type, we0.status, we0.payload, we0.updated`).
 		WithArgs(model.Locked, "NOW()", model.Deferred)
 	_, err := r.Lock(context.Background(), 10)
 

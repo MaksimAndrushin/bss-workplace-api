@@ -33,13 +33,13 @@ create table workplaces_event_p0 partition of workplaces_events(workplace_id) fo
 create unique index workplaces_events_p0_uidx_id on workplaces_event_p0(id);
 
 create table workplaces_event_p1 partition of workplaces_events(workplace_id) for values with (modulus 4, remainder 1);
-create unique index workplaces_events_p1_uidx_id on workplaces_event_p0(id);
+create unique index workplaces_events_p1_uidx_id on workplaces_event_p1(id);
 
 create table workplaces_event_p2 partition of workplaces_events(workplace_id) for values with (modulus 4, remainder 2);
-create unique index workplaces_events_p2_uidx_id on workplaces_event_p0(id);
+create unique index workplaces_events_p2_uidx_id on workplaces_event_p2(id);
 
 create table workplaces_event_p3 partition of workplaces_events(workplace_id) for values with (modulus 4, remainder 3);
-create unique index workplaces_events_p3_uidx_id on workplaces_event_p0(id);
+create unique index workplaces_events_p3_uidx_id on workplaces_event_p3(id);
 
 CREATE INDEX wrkpl_event_p0_status_idx ON workplaces_event_p0 USING btree (status);
 CREATE INDEX wrkpl_event_p1_status_idx ON workplaces_event_p1 USING btree (status);

@@ -710,3 +710,230 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = RemoveWorkplaceV1ResponseValidationError{}
+
+// Validate checks the field values on UpdateWorkplaceV1Request with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateWorkplaceV1Request) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	if v, ok := interface{}(m.GetValue()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return UpdateWorkplaceV1RequestValidationError{
+				field:  "Value",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// UpdateWorkplaceV1RequestValidationError is the validation error returned by
+// UpdateWorkplaceV1Request.Validate if the designated constraints aren't met.
+type UpdateWorkplaceV1RequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateWorkplaceV1RequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateWorkplaceV1RequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateWorkplaceV1RequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateWorkplaceV1RequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateWorkplaceV1RequestValidationError) ErrorName() string {
+	return "UpdateWorkplaceV1RequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateWorkplaceV1RequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateWorkplaceV1Request.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateWorkplaceV1RequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateWorkplaceV1RequestValidationError{}
+
+// Validate checks the field values on UpdateWorkplaceV1Response with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, an error is returned.
+func (m *UpdateWorkplaceV1Response) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Updated
+
+	return nil
+}
+
+// UpdateWorkplaceV1ResponseValidationError is the validation error returned by
+// UpdateWorkplaceV1Response.Validate if the designated constraints aren't met.
+type UpdateWorkplaceV1ResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateWorkplaceV1ResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateWorkplaceV1ResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateWorkplaceV1ResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateWorkplaceV1ResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateWorkplaceV1ResponseValidationError) ErrorName() string {
+	return "UpdateWorkplaceV1ResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateWorkplaceV1ResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateWorkplaceV1Response.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateWorkplaceV1ResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateWorkplaceV1ResponseValidationError{}
+
+// Validate checks the field values on WorkplaceEvent with the rules defined in
+// the proto definition for this message. If any rules are violated, an error
+// is returned.
+func (m *WorkplaceEvent) Validate() error {
+	if m == nil {
+		return nil
+	}
+
+	// no validation rules for Id
+
+	// no validation rules for EventType
+
+	// no validation rules for EventStatus
+
+	if v, ok := interface{}(m.GetWorkplace()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return WorkplaceEventValidationError{
+				field:  "Workplace",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	return nil
+}
+
+// WorkplaceEventValidationError is the validation error returned by
+// WorkplaceEvent.Validate if the designated constraints aren't met.
+type WorkplaceEventValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e WorkplaceEventValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e WorkplaceEventValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e WorkplaceEventValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e WorkplaceEventValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e WorkplaceEventValidationError) ErrorName() string { return "WorkplaceEventValidationError" }
+
+// Error satisfies the builtin error interface
+func (e WorkplaceEventValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sWorkplaceEvent.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = WorkplaceEventValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = WorkplaceEventValidationError{}

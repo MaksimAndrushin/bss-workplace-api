@@ -66,7 +66,7 @@ func TestLockErrors(t *testing.T) {
 }
 
 func startRetranslator(fixture events.RetranslatorMockFixture) {
-	cfg := Config{
+	cfg := RetranslatorConfig{
 		ChannelSize:    512,
 		ConsumerCount:  1,
 		ConsumeSize:    4,

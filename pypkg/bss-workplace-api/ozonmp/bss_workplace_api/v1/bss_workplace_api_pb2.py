@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='ozonmp.bss_workplace_api.v1',
   syntax='proto3',
   serialized_options=_b('ZKgithub.com/ozonmp/bss-workplace-api/pkg/bss-workplace-api;bss_workplace_api'),
-  serialized_pb=_b('\n3ozonmp/bss_workplace_api/v1/bss_workplace_api.proto\x12\x1bozonmp.bss_workplace_api.v1\x1a\x17validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"y\n\tWorkplace\x12\x0e\n\x02id\x18\x01 \x01(\x04R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n\x04size\x18\x03 \x01(\rR\x04size\x12\x34\n\x07\x63reated\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x07\x63reated\"K\n\x18\x43reateWorkplaceV1Request\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12\x1b\n\x04size\x18\x02 \x01(\rB\x07\xfa\x42\x04*\x02 \x00R\x04size\">\n\x19\x43reateWorkplaceV1Response\x12!\n\x0cworkplace_id\x18\x01 \x01(\x04R\x0bworkplaceId\"H\n\x1a\x44\x65scribeWorkplaceV1Request\x12*\n\x0cworkplace_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0bworkplaceId\"[\n\x1b\x44\x65scribeWorkplaceV1Response\x12<\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.bss_workplace_api.v1.WorkplaceR\x05value\"P\n\x17ListWorkplacesV1Request\x12\x16\n\x06offset\x18\x01 \x01(\x04R\x06offset\x12\x1d\n\x05limit\x18\x02 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x05limit\"X\n\x18ListWorkplacesV1Response\x12<\n\x05items\x18\x01 \x03(\x0b\x32&.ozonmp.bss_workplace_api.v1.WorkplaceR\x05items\"F\n\x18RemoveWorkplaceV1Request\x12*\n\x0cworkplace_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0bworkplaceId\"1\n\x19RemoveWorkplaceV1Response\x12\x14\n\x05\x66ound\x18\x01 \x01(\x08R\x05\x66ound2\xb0\x05\n\x16\x42ssWorkplaceApiService\x12\x9d\x01\n\x11\x43reateWorkplaceV1\x12\x35.ozonmp.bss_workplace_api.v1.CreateWorkplaceV1Request\x1a\x36.ozonmp.bss_workplace_api.v1.CreateWorkplaceV1Response\"\x19\x82\xd3\xe4\x93\x02\x13\"\x0e/v1/workplaces:\x01*\x12\xaf\x01\n\x13\x44\x65scribeWorkplaceV1\x12\x37.ozonmp.bss_workplace_api.v1.DescribeWorkplaceV1Request\x1a\x38.ozonmp.bss_workplace_api.v1.DescribeWorkplaceV1Response\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/workplaces/{workplace_id}\x12\x97\x01\n\x10ListWorkplacesV1\x12\x34.ozonmp.bss_workplace_api.v1.ListWorkplacesV1Request\x1a\x35.ozonmp.bss_workplace_api.v1.ListWorkplacesV1Response\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/workplaces\x12\xa9\x01\n\x11RemoveWorkplaceV1\x12\x35.ozonmp.bss_workplace_api.v1.RemoveWorkplaceV1Request\x1a\x36.ozonmp.bss_workplace_api.v1.RemoveWorkplaceV1Response\"%\x82\xd3\xe4\x93\x02\x1f*\x1d/v1/workplaces/{workplace_id}BMZKgithub.com/ozonmp/bss-workplace-api/pkg/bss-workplace-api;bss_workplace_apib\x06proto3')
+  serialized_pb=_b('\n3ozonmp/bss_workplace_api/v1/bss_workplace_api.proto\x12\x1bozonmp.bss_workplace_api.v1\x1a\x17validate/validate.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"y\n\tWorkplace\x12\x0e\n\x02id\x18\x01 \x01(\x04R\x02id\x12\x12\n\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n\x04size\x18\x03 \x01(\rR\x04size\x12\x34\n\x07\x63reated\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.TimestampR\x07\x63reated\"K\n\x18\x43reateWorkplaceV1Request\x12\x12\n\x04name\x18\x01 \x01(\tR\x04name\x12\x1b\n\x04size\x18\x02 \x01(\rB\x07\xfa\x42\x04*\x02 \x00R\x04size\">\n\x19\x43reateWorkplaceV1Response\x12!\n\x0cworkplace_id\x18\x01 \x01(\x04R\x0bworkplaceId\"H\n\x1a\x44\x65scribeWorkplaceV1Request\x12*\n\x0cworkplace_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0bworkplaceId\"[\n\x1b\x44\x65scribeWorkplaceV1Response\x12<\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.bss_workplace_api.v1.WorkplaceR\x05value\"P\n\x17ListWorkplacesV1Request\x12\x16\n\x06offset\x18\x01 \x01(\x04R\x06offset\x12\x1d\n\x05limit\x18\x02 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x05limit\"X\n\x18ListWorkplacesV1Response\x12<\n\x05items\x18\x01 \x03(\x0b\x32&.ozonmp.bss_workplace_api.v1.WorkplaceR\x05items\"F\n\x18RemoveWorkplaceV1Request\x12*\n\x0cworkplace_id\x18\x01 \x01(\x04\x42\x07\xfa\x42\x04\x32\x02 \x00R\x0bworkplaceId\"1\n\x19RemoveWorkplaceV1Response\x12\x14\n\x05\x66ound\x18\x01 \x01(\x08R\x05\x66ound\"X\n\x18UpdateWorkplaceV1Request\x12<\n\x05value\x18\x01 \x01(\x0b\x32&.ozonmp.bss_workplace_api.v1.WorkplaceR\x05value\"5\n\x19UpdateWorkplaceV1Response\x12\x18\n\x07updated\x18\x01 \x01(\x08R\x07updated\"\xa8\x01\n\x0eWorkplaceEvent\x12\x0e\n\x02id\x18\x01 \x01(\x04R\x02id\x12\x1d\n\nevent_type\x18\x02 \x01(\rR\teventType\x12!\n\x0c\x65vent_status\x18\x03 \x01(\rR\x0b\x65ventStatus\x12\x44\n\tworkplace\x18\x04 \x01(\x0b\x32&.ozonmp.bss_workplace_api.v1.WorkplaceR\tworkplace2\xd0\x06\n\x16\x42ssWorkplaceApiService\x12\x9d\x01\n\x11\x43reateWorkplaceV1\x12\x35.ozonmp.bss_workplace_api.v1.CreateWorkplaceV1Request\x1a\x36.ozonmp.bss_workplace_api.v1.CreateWorkplaceV1Response\"\x19\x82\xd3\xe4\x93\x02\x13\"\x0e/v1/workplaces:\x01*\x12\xaf\x01\n\x13\x44\x65scribeWorkplaceV1\x12\x37.ozonmp.bss_workplace_api.v1.DescribeWorkplaceV1Request\x1a\x38.ozonmp.bss_workplace_api.v1.DescribeWorkplaceV1Response\"%\x82\xd3\xe4\x93\x02\x1f\x12\x1d/v1/workplaces/{workplace_id}\x12\x97\x01\n\x10ListWorkplacesV1\x12\x34.ozonmp.bss_workplace_api.v1.ListWorkplacesV1Request\x1a\x35.ozonmp.bss_workplace_api.v1.ListWorkplacesV1Response\"\x16\x82\xd3\xe4\x93\x02\x10\x12\x0e/v1/workplaces\x12\xa9\x01\n\x11RemoveWorkplaceV1\x12\x35.ozonmp.bss_workplace_api.v1.RemoveWorkplaceV1Request\x1a\x36.ozonmp.bss_workplace_api.v1.RemoveWorkplaceV1Response\"%\x82\xd3\xe4\x93\x02\x1f*\x1d/v1/workplaces/{workplace_id}\x12\x9d\x01\n\x11UpdateWorkplaceV1\x12\x35.ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Request\x1a\x36.ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Response\"\x19\x82\xd3\xe4\x93\x02\x13\x1a\x0e/v1/workplaces:\x01*BMZKgithub.com/ozonmp/bss-workplace-api/pkg/bss-workplace-api;bss_workplace_apib\x06proto3')
   ,
   dependencies=[validate_dot_validate__pb2.DESCRIPTOR,google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -342,9 +342,125 @@ _REMOVEWORKPLACEV1RESPONSE = _descriptor.Descriptor(
   serialized_end=896,
 )
 
+
+_UPDATEWORKPLACEV1REQUEST = _descriptor.Descriptor(
+  name='UpdateWorkplaceV1Request',
+  full_name='ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Request',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='value', full_name='ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Request.value', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='value', file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=898,
+  serialized_end=986,
+)
+
+
+_UPDATEWORKPLACEV1RESPONSE = _descriptor.Descriptor(
+  name='UpdateWorkplaceV1Response',
+  full_name='ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Response',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='updated', full_name='ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Response.updated', index=0,
+      number=1, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='updated', file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=988,
+  serialized_end=1041,
+)
+
+
+_WORKPLACEEVENT = _descriptor.Descriptor(
+  name='WorkplaceEvent',
+  full_name='ozonmp.bss_workplace_api.v1.WorkplaceEvent',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='ozonmp.bss_workplace_api.v1.WorkplaceEvent.id', index=0,
+      number=1, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='id', file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='event_type', full_name='ozonmp.bss_workplace_api.v1.WorkplaceEvent.event_type', index=1,
+      number=2, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='eventType', file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='event_status', full_name='ozonmp.bss_workplace_api.v1.WorkplaceEvent.event_status', index=2,
+      number=3, type=13, cpp_type=3, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='eventStatus', file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='workplace', full_name='ozonmp.bss_workplace_api.v1.WorkplaceEvent.workplace', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, json_name='workplace', file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=1044,
+  serialized_end=1212,
+)
+
 _WORKPLACE.fields_by_name['created'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 _DESCRIBEWORKPLACEV1RESPONSE.fields_by_name['value'].message_type = _WORKPLACE
 _LISTWORKPLACESV1RESPONSE.fields_by_name['items'].message_type = _WORKPLACE
+_UPDATEWORKPLACEV1REQUEST.fields_by_name['value'].message_type = _WORKPLACE
+_WORKPLACEEVENT.fields_by_name['workplace'].message_type = _WORKPLACE
 DESCRIPTOR.message_types_by_name['Workplace'] = _WORKPLACE
 DESCRIPTOR.message_types_by_name['CreateWorkplaceV1Request'] = _CREATEWORKPLACEV1REQUEST
 DESCRIPTOR.message_types_by_name['CreateWorkplaceV1Response'] = _CREATEWORKPLACEV1RESPONSE
@@ -354,6 +470,9 @@ DESCRIPTOR.message_types_by_name['ListWorkplacesV1Request'] = _LISTWORKPLACESV1R
 DESCRIPTOR.message_types_by_name['ListWorkplacesV1Response'] = _LISTWORKPLACESV1RESPONSE
 DESCRIPTOR.message_types_by_name['RemoveWorkplaceV1Request'] = _REMOVEWORKPLACEV1REQUEST
 DESCRIPTOR.message_types_by_name['RemoveWorkplaceV1Response'] = _REMOVEWORKPLACEV1RESPONSE
+DESCRIPTOR.message_types_by_name['UpdateWorkplaceV1Request'] = _UPDATEWORKPLACEV1REQUEST
+DESCRIPTOR.message_types_by_name['UpdateWorkplaceV1Response'] = _UPDATEWORKPLACEV1RESPONSE
+DESCRIPTOR.message_types_by_name['WorkplaceEvent'] = _WORKPLACEEVENT
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
 Workplace = _reflection.GeneratedProtocolMessageType('Workplace', (_message.Message,), dict(
@@ -419,6 +538,27 @@ RemoveWorkplaceV1Response = _reflection.GeneratedProtocolMessageType('RemoveWork
   ))
 _sym_db.RegisterMessage(RemoveWorkplaceV1Response)
 
+UpdateWorkplaceV1Request = _reflection.GeneratedProtocolMessageType('UpdateWorkplaceV1Request', (_message.Message,), dict(
+  DESCRIPTOR = _UPDATEWORKPLACEV1REQUEST,
+  __module__ = 'ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2'
+  # @@protoc_insertion_point(class_scope:ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Request)
+  ))
+_sym_db.RegisterMessage(UpdateWorkplaceV1Request)
+
+UpdateWorkplaceV1Response = _reflection.GeneratedProtocolMessageType('UpdateWorkplaceV1Response', (_message.Message,), dict(
+  DESCRIPTOR = _UPDATEWORKPLACEV1RESPONSE,
+  __module__ = 'ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2'
+  # @@protoc_insertion_point(class_scope:ozonmp.bss_workplace_api.v1.UpdateWorkplaceV1Response)
+  ))
+_sym_db.RegisterMessage(UpdateWorkplaceV1Response)
+
+WorkplaceEvent = _reflection.GeneratedProtocolMessageType('WorkplaceEvent', (_message.Message,), dict(
+  DESCRIPTOR = _WORKPLACEEVENT,
+  __module__ = 'ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2'
+  # @@protoc_insertion_point(class_scope:ozonmp.bss_workplace_api.v1.WorkplaceEvent)
+  ))
+_sym_db.RegisterMessage(WorkplaceEvent)
+
 
 DESCRIPTOR._options = None
 _CREATEWORKPLACEV1REQUEST.fields_by_name['size']._options = None
@@ -432,8 +572,8 @@ _BSSWORKPLACEAPISERVICE = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=899,
-  serialized_end=1587,
+  serialized_start=1215,
+  serialized_end=2063,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateWorkplaceV1',
@@ -470,6 +610,15 @@ _BSSWORKPLACEAPISERVICE = _descriptor.ServiceDescriptor(
     input_type=_REMOVEWORKPLACEV1REQUEST,
     output_type=_REMOVEWORKPLACEV1RESPONSE,
     serialized_options=_b('\202\323\344\223\002\037*\035/v1/workplaces/{workplace_id}'),
+  ),
+  _descriptor.MethodDescriptor(
+    name='UpdateWorkplaceV1',
+    full_name='ozonmp.bss_workplace_api.v1.BssWorkplaceApiService.UpdateWorkplaceV1',
+    index=4,
+    containing_service=None,
+    input_type=_UPDATEWORKPLACEV1REQUEST,
+    output_type=_UPDATEWORKPLACEV1RESPONSE,
+    serialized_options=_b('\202\323\344\223\002\023\032\016/v1/workplaces:\001*'),
   ),
 ])
 _sym_db.RegisterServiceDescriptor(_BSSWORKPLACEAPISERVICE)

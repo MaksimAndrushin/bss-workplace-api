@@ -33,6 +33,10 @@ class BssWorkplaceApiServiceBase(abc.ABC):
     async def RemoveWorkplaceV1(self, stream: 'grpclib.server.Stream[ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.RemoveWorkplaceV1Request, ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.RemoveWorkplaceV1Response]') -> None:
         pass
 
+    @abc.abstractmethod
+    async def UpdateWorkplaceV1(self, stream: 'grpclib.server.Stream[ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.UpdateWorkplaceV1Request, ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.UpdateWorkplaceV1Response]') -> None:
+        pass
+
     def __mapping__(self) -> typing.Dict[str, grpclib.const.Handler]:
         return {
             '/ozonmp.bss_workplace_api.v1.BssWorkplaceApiService/CreateWorkplaceV1': grpclib.const.Handler(
@@ -58,6 +62,12 @@ class BssWorkplaceApiServiceBase(abc.ABC):
                 grpclib.const.Cardinality.UNARY_UNARY,
                 ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.RemoveWorkplaceV1Request,
                 ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.RemoveWorkplaceV1Response,
+            ),
+            '/ozonmp.bss_workplace_api.v1.BssWorkplaceApiService/UpdateWorkplaceV1': grpclib.const.Handler(
+                self.UpdateWorkplaceV1,
+                grpclib.const.Cardinality.UNARY_UNARY,
+                ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.UpdateWorkplaceV1Request,
+                ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.UpdateWorkplaceV1Response,
             ),
         }
 
@@ -88,4 +98,10 @@ class BssWorkplaceApiServiceStub:
             '/ozonmp.bss_workplace_api.v1.BssWorkplaceApiService/RemoveWorkplaceV1',
             ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.RemoveWorkplaceV1Request,
             ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.RemoveWorkplaceV1Response,
+        )
+        self.UpdateWorkplaceV1 = grpclib.client.UnaryUnaryMethod(
+            channel,
+            '/ozonmp.bss_workplace_api.v1.BssWorkplaceApiService/UpdateWorkplaceV1',
+            ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.UpdateWorkplaceV1Request,
+            ozonmp.bss_workplace_api.v1.bss_workplace_api_pb2.UpdateWorkplaceV1Response,
         )

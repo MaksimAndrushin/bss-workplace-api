@@ -15,6 +15,7 @@ type WorkplaceService interface {
 	DescribeWorkplace(ctx context.Context, workplaceID uint64) (*model.Workplace, error)
 	ListWorkplaces(ctx context.Context, offset uint64, limit uint64) ([]model.Workplace, error)
 	RemoveWorkplace(ctx context.Context, workplaceID uint64) (bool, error)
+	UpdateWorkplace(ctx context.Context, workplace model.Workplace) (bool, error)
 }
 
 type workplaceService struct {
@@ -101,4 +102,33 @@ func (ws *workplaceService) RemoveWorkplace(ctx context.Context, workplaceID uin
 	}
 
 	return ok, nil
+}
+
+func (ws *workplaceService) UpdateWorkplace(ctx context.Context, workplace model.Workplace) (bool, error) {
+
+	err := database.WithTx(ctx, ws.DbHolder, func(ctx context.Context, tx *sqlx.Tx) error {
+		span := tracer.CreateSpan(ctx, "Service UpdateWorkplace")
+		defer span.Close()
+
+		_, err := ws.WorkplaceRepo.UpdateWorkplace(ctx, workplace, tx)
+		if err != nil {
+			return err
+		}
+
+		workplaceEntity := model.CreateEventFromWorkplace(model.Updated, model.Deferred, model.Workplace{ID: workplace.ID, Name: workplace.Name, Size: workplace.Size})
+
+		err = ws.WorkplaceEventRepo.Add(ctx, *workplaceEntity, tx)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		logger.ErrorKV(ctx, "UpdateWorkplace -- failed", "err", err)
+		return false, err
+	}
+
+	return true, nil
 }

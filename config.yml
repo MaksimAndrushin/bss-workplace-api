@@ -52,3 +52,11 @@ kafka:
     - "kafka-1:9092"
     - "kafka-2:9092"
     - "kafka-3:9092"
+
+retranslator:
+  channelSize: 512
+  consumerCount: 2
+  consumeSize: 10
+  producerCount: 28
+  workerCount: 2
+  consumeTimeout: 5

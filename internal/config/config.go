@@ -1,10 +1,9 @@
 package config
 
 import (
+	"gopkg.in/yaml.v3"
 	"os"
 	"path/filepath"
-
-	"gopkg.in/yaml.v3"
 )
 
 // Build information -ldflags .
@@ -97,6 +96,15 @@ type Status struct {
 	ReadinessPath string `yaml:"readinessPath"`
 }
 
+type Retranslator struct {
+	ChannelSize uint64 `yaml:"channelSize"`
+	ConsumerCount uint64 `yaml:"consumerCount"`
+	ConsumeSize uint64 `yaml:"consumeSize"`
+	ProducerCount uint64 `yaml:"producerCount"`
+	WorkerCount int `yaml:"workerCount"`
+	ConsumeTimeout int `yaml:"consumeTimeout"`
+}
+
 // Config - contains all configuration parameters in config package.
 type Config struct {
 	Project  Project  `yaml:"project"`
@@ -108,6 +116,7 @@ type Config struct {
 	Kafka    Kafka    `yaml:"kafka"`
 	Status   Status   `yaml:"status"`
 	Telemetry Telemetry `yaml:"telemetry"`
+	Retranslator Retranslator `yaml:"retranslator"`
 }
 
 // ReadConfigYML - read configurations from file and init instance Config.

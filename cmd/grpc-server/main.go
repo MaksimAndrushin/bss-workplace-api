@@ -10,6 +10,7 @@ import (
 	"github.com/ozonmp/bss-workplace-api/internal/infra/tracer"
 	"github.com/ozonmp/bss-workplace-api/internal/repo"
 	"github.com/rs/zerolog/log"
+	"time"
 
 	_ "github.com/jackc/pgx/v4"
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -87,16 +88,16 @@ func main() {
 
 	kafkaEventSender, err := sender.NewKafkaSender(cfg.Kafka.Brokers, cfg.Kafka.Topic)
 	if err != nil {
-		panic(err)
+		logger.FatalKV(ctx, "Failed init kafka sender", "err", err)
 	}
 
 	var retranslatorConfig = retranslator.RetranslatorConfig{
-		ChannelSize:    512,
-		ConsumerCount:  2,
-		ConsumeSize:    10,
-		ProducerCount:  28,
-		WorkerCount:    2,
-		ConsumeTimeout: 5,
+		ChannelSize:    cfg.Retranslator.ChannelSize,
+		ConsumerCount:  cfg.Retranslator.ConsumerCount,
+		ConsumeSize:    cfg.Retranslator.ConsumeSize,
+		ProducerCount:  cfg.Retranslator.ProducerCount,
+		WorkerCount:    cfg.Retranslator.WorkerCount,
+		ConsumeTimeout: time.Duration(cfg.Retranslator.ConsumeTimeout),
 		Repo:           workplaceEventRepo,
 		Sender:         kafkaEventSender,
 	}

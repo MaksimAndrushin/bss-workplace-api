@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package ozonmp.bss_workplace_facade.v1;
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/ozonmp/bss-workplace-facade/pkg/bss-workplace-facade;bss_workplace_facade";
+
+service BssFacadeEventsApiService {
+  // ListEventsV1 - List events
+  rpc ListEventsV1(ListEventsV1Request) returns (ListEventsV1Response) {
+    option (google.api.http) = {
+      get: "/v1/events"
+    };
+  }
+}
+message Workplace {
+  uint64 id = 1;
+  string name = 2;
+  uint32 size = 3;
+  google.protobuf.Timestamp created = 4;
+}
+
+message WorkplaceEvent {
+  uint64 id = 1;
+  uint32 event_type = 2;
+  uint32 event_status = 3;
+  Workplace workplace = 4;
+}
+
+message ListEventsV1Request {
+  uint64 offset = 1;
+  uint64 limit = 2 [(validate.rules).uint64.gt = 0];
+}
+
+message ListEventsV1Response {
+  repeated WorkplaceEvent items = 1;
+  uint64 total = 2;
+}

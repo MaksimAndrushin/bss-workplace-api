@@ -1,0 +1,19 @@
+project:
+  name: Ozon Code Platform Workplace Bot
+  debug: true
+  environment: development
+
+status:
+  host: 0.0.0.0
+  port: 8000
+  livenessPath: /live
+  readinessPath: /ready
+  versionPath: /version
+
+workplace-svc:
+  host: 0.0.0.0
+  port: 8082
+
+facade-svc:
+  host: 0.0.0.0
+  port: 8083

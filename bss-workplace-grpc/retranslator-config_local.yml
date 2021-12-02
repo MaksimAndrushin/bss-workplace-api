@@ -1,0 +1,66 @@
+project:
+  name: Ozon Code Platform Workplace Retranslator
+  debug: true
+  environment: development
+
+grpc:
+  host: 0.0.0.0
+  port: 18082
+  maxConnectionIdle: 5 # Minutes
+  timeout: 15 # Seconds
+  maxConnectionAge: 5 # Minutes
+
+rest:
+  host: 0.0.0.0
+  port: 18080
+
+metrics:
+  host: 0.0.0.0
+  port: 19100
+  path: /metrics
+
+jaeger:
+  service: "bss-workplace-api"
+  host: "0.0.0.0"
+  port: ":6831"
+
+telemetry:
+  graylogPath: 0.0.0.0:12201
+
+status:
+  host: 0.0.0.0
+  port: 8000
+  livenessPath: /live
+  readinessPath: /ready
+  versionPath: /version
+
+database:
+  host: 127.0.0.1
+  port: 5432
+  user: postgres
+  password: postgres
+  name: bss_workplace_api
+  sslmode: disable
+  migrations: migrations
+  driver: pgx
+
+retranslator:
+  channelSize: 512
+  consumerCount: 2
+  consumeSize: 10
+  producerCount: 28
+  workerCount: 2
+  consumeTimeout: 5
+
+kafka:
+  capacity: 512
+  topic: "bss-workplace-events"
+  groupId: "bss-workplace-api"
+  brokers:
+    - "0.0.0.0:9094"
+    - "0.0.0.0:9095"
+    - "0.0.0.0:9096"
+
+redis:
+  host: "0.0.0.0"
+  port: 6379

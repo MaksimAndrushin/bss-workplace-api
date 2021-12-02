@@ -1,0 +1,23 @@
+project:
+  name: Ozon Code Platform Workplace Bot
+  debug: true
+  environment: development
+
+status:
+  host: 0.0.0.0
+  port: 8000
+  livenessPath: /live
+  readinessPath: /ready
+  versionPath: /version
+
+workplace-svc:
+  host: bss-workplace-api
+  port: 8082
+  retryCount: 5
+  retryDelaySec: 5
+
+facade-svc:
+  host: bss-workplace-facade
+  port: 8083
+  retryCount: 5
+  retryDelaySec: 5
